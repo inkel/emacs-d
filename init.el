@@ -9,14 +9,18 @@
 (setq uniquify-buffer-name-style 'post-forward)
 (setq column-number-mode t)
 (setq size-indication-mode t)
-;; (put 'upcase-region 'disabled nil)
-;; (put 'downcase-region 'disabled nil
 (icomplete-mode t)
 (setq require-final-newline t)
 '(recentf-mode)
 (require 'paren)
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
+(setq tags-file-name "TAGS")
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
+(prefer-coding-system 'utf-8)
+(require 'color-theme)
+(setq color-theme-is-global t)
 
 ;;; Visual configurations
 (progn
@@ -71,10 +75,11 @@
 (global-set-key (kbd "C-z") 'nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (windmove-default-keybindings 'meta) ; Move between windows with ALT + <arrow>
+(global-set-key [C-tab] 'other-window)
 
 ;;; Libraries
 (add-to-list 'load-path "~/.emacs.d/vendors/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/") 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 ;;; Auto-load modes
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
@@ -89,3 +94,6 @@
 (setq ac-auto-start t)
 (setq ac-dwim 3)
 (setq ac-override-local-map nil)
+
+;;; Hooks
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
