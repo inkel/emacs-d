@@ -4,3 +4,9 @@
 [submodule "vendors/twilight-emacs"]
 	path = vendors/twilight-emacs
 	url = git@github.com:inkel/twilight-emacs.git
+[submodule "vendors/haml-mode"]
+	path = vendors/haml-mode
+	url = https://github.com/nex3/haml-mode.git
+[submodule "vendors/sass-mode"]
+	path = vendors/sass-mode
+	url = https://github.com/nex3/sass-mode.git

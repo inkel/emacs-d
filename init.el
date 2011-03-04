@@ -88,6 +88,12 @@
 (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("^Gemfile$" . ruby-mode))
+(add-to-list 'load-path "~/.emacs.d/vendors/haml-mode/")
+(require 'haml-mode)
+(add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
+(add-to-list 'load-path "~/.emacs.d/vendors/sass-mode/")
+(require 'sass-mode)
+(add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
 
 ;;; Auto-complete
 (add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
