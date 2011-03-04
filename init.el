@@ -81,3 +81,11 @@
 (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("^Gemfile$" . ruby-mode))
+
+;;; Auto-complete
+(add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
+(require 'auto-complete-config)
+(global-auto-complete-mode t)
+(setq ac-auto-start t)
+(setq ac-dwim 3)
+(setq ac-override-local-map nil)

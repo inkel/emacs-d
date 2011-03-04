@@ -1,0 +1,3 @@
+[submodule "vendors/auto-complete"]
+	path = vendors/auto-complete
+	url = https://github.com/m2ym/auto-complete.git
