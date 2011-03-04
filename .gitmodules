@@ -1,3 +1,6 @@
 [submodule "vendors/auto-complete"]
 	path = vendors/auto-complete
 	url = https://github.com/m2ym/auto-complete.git
+[submodule "vendors/twilight-emacs"]
+	path = vendors/twilight-emacs
+	url = git@github.com:inkel/twilight-emacs.git

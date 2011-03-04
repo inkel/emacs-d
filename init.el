@@ -21,6 +21,8 @@
 (prefer-coding-system 'utf-8)
 (require 'color-theme)
 (setq color-theme-is-global t)
+(load-file "~/.emacs.d/vendors/twilight-emacs/color-theme-twilight.el")
+(color-theme-twilight)
 
 ;;; Visual configurations
 (progn
