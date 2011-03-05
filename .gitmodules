@@ -10,3 +10,6 @@
 [submodule "vendors/sass-mode"]
 	path = vendors/sass-mode
 	url = https://github.com/nex3/sass-mode.git
+[submodule "vendors/rinari"]
+	path = vendors/rinari
+	url = https://github.com/eschulte/rinari.git

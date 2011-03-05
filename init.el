@@ -84,10 +84,6 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 ;;; Auto-load modes
-(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("^Gemfile$" . ruby-mode))
 (add-to-list 'load-path "~/.emacs.d/vendors/haml-mode/")
 (require 'haml-mode)
 (add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
@@ -105,3 +101,23 @@
 
 ;;; Hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;;; Ruby & Ruby on Rails
+(add-to-list 'load-path "~/.emacs.d/vendors/rinari/")
+(require 'rinari)
+(setq rinari-tags-file-name "TAGS")
+(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("^Gemfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("^Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.god$" . ruby-mode))
+
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (add-hook 'local-write-file-hooks
+                      '(lambda()
+                         (save-excursion
+                           (untabify (point-min) (point-max)))))
+            (set (make-local-variable 'indent-tabs-mode) 'nil)
+            (set (make-local-variable 'tab-width) 2)))
