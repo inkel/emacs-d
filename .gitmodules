@@ -13,3 +13,6 @@
 [submodule "vendors/rinari"]
 	path = vendors/rinari
 	url = https://github.com/eschulte/rinari.git
+[submodule "vendors/yaml-mode"]
+	path = vendors/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git

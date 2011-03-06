@@ -121,3 +121,10 @@
                            (untabify (point-min) (point-max)))))
             (set (make-local-variable 'indent-tabs-mode) 'nil)
             (set (make-local-variable 'tab-width) 2)))
+
+(add-to-list 'load-path "~/.emacs.d/vendors/yaml-mode/")
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-hook 'yaml-mode-hook
+          '(lambda ()
+             (define-key yaml-mode-map "RET" 'newline-and-indent)))
