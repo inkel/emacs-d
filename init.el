@@ -128,3 +128,6 @@
 (add-hook 'yaml-mode-hook
           '(lambda ()
              (define-key yaml-mode-map "RET" 'newline-and-indent)))
+
+(autoload 'feature-mode "~/.emacs.d/vendors/cucumber.el/feature-mode.el")
+(add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))

@@ -16,3 +16,6 @@
 [submodule "vendors/yaml-mode"]
 	path = vendors/yaml-mode
 	url = https://github.com/yoshiki/yaml-mode.git
+[submodule "vendors/cucumber.el"]
+	path = vendors/cucumber.el
+	url = https://github.com/michaelklishin/cucumber.el
