@@ -6,6 +6,7 @@
 (setq startup-screen-inhibit-startup-screen t)
 (setq inhibit-startup-screen t)
 (setq yes-or-no-p 'y-or-n-p)
+(require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
 (setq column-number-mode t)
 (setq size-indication-mode t)
@@ -79,18 +80,6 @@
 (windmove-default-keybindings 'meta) ; Move between windows with ALT + <arrow>
 (global-set-key [C-tab] 'other-window)
 
-;;; Libraries
-(add-to-list 'load-path "~/.emacs.d/vendors/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
-
-;;; Auto-load modes
-(add-to-list 'load-path "~/.emacs.d/vendors/haml-mode/")
-(require 'haml-mode)
-(add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
-(add-to-list 'load-path "~/.emacs.d/vendors/sass-mode/")
-(require 'sass-mode)
-(add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
-
 ;;; Auto-complete
 (add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
 (require 'auto-complete-config)
@@ -109,8 +98,8 @@
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("^Gemfile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("^Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.god$" . ruby-mode))
 
 (add-hook 'ruby-mode-hook
@@ -122,12 +111,16 @@
             (set (make-local-variable 'indent-tabs-mode) 'nil)
             (set (make-local-variable 'tab-width) 2)))
 
-(add-to-list 'load-path "~/.emacs.d/vendors/yaml-mode/")
-(require 'yaml-mode)
+(autoload 'yaml-mode "~/.emacs.d/vendors/yaml-mode/yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 (add-hook 'yaml-mode-hook
           '(lambda ()
              (define-key yaml-mode-map "RET" 'newline-and-indent)))
 
-(autoload 'feature-mode "~/.emacs.d/vendors/cucumber.el/feature-mode.el")
+(autoload 'haml-mode "~/.emacs.d/vendors/haml-mode/haml-mode")
+(add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
+(autoload 'sass-mode "~/.emacs.d/vendors/sass-mode/sass-mode")
+(add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
+
+(autoload 'feature-mode "~/.emacs.d/vendors/cucumber.el/feature-mode")
 (add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
