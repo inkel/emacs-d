@@ -19,3 +19,6 @@
 [submodule "vendors/cucumber.el"]
 	path = vendors/cucumber.el
 	url = https://github.com/michaelklishin/cucumber.el
+[submodule "vendors/ruby-electric"]
+	path = vendors/ruby-electric
+	url = https://github.com/qoobaa/ruby-electric.git

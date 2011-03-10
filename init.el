@@ -104,12 +104,16 @@
 
 (load-file "~/.emacs.d/site-lisp/ruby-block.el")
 
+(add-to-list 'load-path  "~/.emacs.d/vendors/ruby-electric")
+
 (add-hook 'ruby-mode-hook
           (lambda ()
             (add-hook 'local-write-file-hooks
                       '(lambda()
                          (save-excursion
                            (untabify (point-min) (point-max)))))
+            (require 'ruby-electric)
+            (ruby-electric-mode t)
             (require 'ruby-block)
             (ruby-block-mode t)
             (set (make-local-variable 'ruby-block-mode-toggle) t)
