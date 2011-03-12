@@ -135,3 +135,8 @@
 
 (autoload 'feature-mode "~/.emacs.d/vendors/cucumber.el/feature-mode")
 (add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
+
+;; CoffeeScript
+(autoload 'coffee-mode "~/.emacs.d/vendors/coffee-mode/coffee-mode")
+(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
+(add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
