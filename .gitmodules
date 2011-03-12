@@ -3,7 +3,7 @@
 	url = https://github.com/m2ym/auto-complete.git
 [submodule "vendors/twilight-emacs"]
 	path = vendors/twilight-emacs
-	url = git@github.com:inkel/twilight-emacs.git
+	url = git://github.com/inkel/twilight-emacs.git
 [submodule "vendors/haml-mode"]
 	path = vendors/haml-mode
 	url = https://github.com/nex3/haml-mode.git
