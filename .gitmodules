@@ -25,3 +25,6 @@
 [submodule "vendors/coffee-mode"]
 	path = vendors/coffee-mode
 	url = git://github.com/defunkt/coffee-mode.git
+[submodule "vendors/yasnippet"]
+	path = vendors/yasnippet
+	url = git://github.com/inkel/yasnippet.git

@@ -140,3 +140,9 @@
 (autoload 'coffee-mode "~/.emacs.d/vendors/coffee-mode/coffee-mode")
 (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
 (add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
+
+;; Code snippets
+(add-to-list 'load-path "~/.emacs.d/vendors/yasnippet")
+(require 'yasnippet) ;; not yasnippet-bundle
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/vendors/yasnippet/snippets")
