@@ -24,6 +24,8 @@
 (setq color-theme-is-global t)
 (load-file "~/.emacs.d/vendors/twilight-emacs/color-theme-twilight.el")
 (color-theme-twilight)
+;; Fix the annoying X issue with Emacs and X clipboard
+(setq x-select-enable-clipboard t)
 
 ;;; Visual configurations
 (progn
