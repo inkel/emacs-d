@@ -146,3 +146,9 @@
 (require 'yasnippet) ;; not yasnippet-bundle
 (yas/initialize)
 (yas/load-directory "~/.emacs.d/vendors/yasnippet/snippets")
+
+;; TextMate minor mode
+;; Absolutely amazing
+(add-to-list 'load-path "~/.emacs.d/vendors/textmate.el")
+(require 'textmate)
+(textmate-mode)

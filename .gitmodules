@@ -28,3 +28,6 @@
 [submodule "vendors/yasnippet"]
 	path = vendors/yasnippet
 	url = git://github.com/inkel/yasnippet.git
+[submodule "vendors/textmate.el"]
+	path = vendors/textmate.el
+	url = https://github.com/defunkt/textmate.el.git
