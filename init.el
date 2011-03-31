@@ -155,3 +155,7 @@
 (add-to-list 'load-path "~/.emacs.d/vendors/textmate.el")
 (require 'textmate)
 (textmate-mode)
+
+;; Magit
+(add-to-list 'load-path "~/.emacs.d/vendors/magit")
+(require 'magit)
