@@ -79,8 +79,11 @@
 (global-set-key (kbd "<M-f9>") 'uncomment-region)
 (global-set-key (kbd "C-z") 'nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(windmove-default-keybindings 'meta) ; Move between windows with ALT + <arrow>
-(global-set-key [C-tab] 'other-window)
+
+(global-set-key [s-left]  'windmove-left)
+(global-set-key [s-right] 'windmove-right)
+(global-set-key [s-up]    'windmove-up)
+(global-set-key [s-down]  'windmove-down)
 
 ;;; Auto-complete
 (add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
