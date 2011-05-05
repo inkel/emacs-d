@@ -131,7 +131,8 @@
           '(lambda ()
              (define-key yaml-mode-map "RET" 'newline-and-indent)))
 
-(autoload 'haml-mode "~/.emacs.d/vendors/haml-mode/haml-mode")
+(load-file "~/.emacs.d/vendors/haml-mode/haml-mode.el")
+(require 'haml-mode) ;; Required by sass-mode
 (add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
 (autoload 'sass-mode "~/.emacs.d/vendors/sass-mode/sass-mode")
 (add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
