@@ -167,3 +167,9 @@
 (require 'jade-mode)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . sws-mode))
+
+;; espresso-mode
+;;(load-file "~/.emacs.d/site-lisp/espresso.el")
+(autoload 'espresso-mode "~/.emacs.d/site-lisp/espresso")
+(add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
