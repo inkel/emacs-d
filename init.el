@@ -160,3 +160,10 @@
 ;; Magit
 (add-to-list 'load-path "~/.emacs.d/vendors/magit")
 (require 'magit)
+
+;; jade-mode
+(add-to-list 'load-path "~/.emacs.d/vendors/jade-mode")
+(require 'sws-mode)
+(require 'jade-mode)
+(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+(add-to-list 'auto-mode-alist '("\\.jade$" . sws-mode))
