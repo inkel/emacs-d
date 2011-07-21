@@ -173,6 +173,7 @@
 (autoload 'espresso-mode "~/.emacs.d/site-lisp/espresso")
 (add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
+(setq espresso-indent-level 2)
 
 ;; Disable annoying ido-mode feature that will try open an existing
 ;; file of the same name
