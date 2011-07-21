@@ -78,6 +78,7 @@
 (global-set-key (kbd "<f9>") 'comment-region)
 (global-set-key (kbd "<M-f9>") 'uncomment-region)
 (global-set-key (kbd "C-z") 'nil)
+(global-set-key (kbd "C-x C-z") 'nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (global-set-key [s-left]  'windmove-left)
