@@ -1,5 +1,7 @@
 (require 'cl)
 
+(load-file "~/.emacs.d/inkel/color-theme.el")
+
 ;; Custom settings goes here
 (setq custom-file "~/.emacs.d/custom.el")
 (if (file-exists-p custom-file)
@@ -30,9 +32,7 @@
 (prefer-coding-system 'utf-8)
 (require 'color-theme)
 (setq color-theme-is-global t)
-(load-file "~/.emacs.d/vendors/twilight-emacs/color-theme-twilight.el")
-(color-theme-twilight)
-;; Fix the annoying X issue with Emacs and X clipboard
+
 (setq x-select-enable-clipboard t)
 
 ;;; Visual configurations
