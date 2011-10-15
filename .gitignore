@@ -5,3 +5,5 @@ history
 ac-comphist.dat
 tramp
 *.elc
+custom.el
+secure.el
