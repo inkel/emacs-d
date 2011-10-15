@@ -246,3 +246,27 @@
           (lambda ()
             (ispell-minor-mode)
             (flyspell-mode)))
+
+;; Jabber
+(defun inkel/open-jabber ()
+  "Start Jabber"
+  (interactive)
+  (require 'jabber-autoloads)
+  (jabber-connect)
+  (switch-to-buffer "-*-jabber-roster-*-"))
+
+;; ERC
+;; http://www.emacswiki.org/emacs/ERC
+(defun inkel/erc-autojoin ()
+  (require 'erc-join)
+  (erc-autojoin-mode 1)
+  (setq erc-autojoin-channels-alist
+        '(("freenode.net" "#rubysur" "#rubyconfar"))))
+
+(defun inkel/erc-freenode ()
+  "IRC on freenode.net"
+  (interactive)
+  (inkel/erc-autojoin)
+  (erc :server "irc.freenode.net"
+       :port 6667
+       :nick "inkel"))
