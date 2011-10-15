@@ -194,4 +194,18 @@
 
 ;; Disable annoying ido-mode feature that will try open an existing
 ;; file of the same name
-(setq ido-use-url-at-point nil)
+(setq ido-use-url-at-point nil
+      ido-everywhere t
+      ido-ignore-buffers (quote ("\\` " "\\*\\w+\\*"))
+      ido-ignore-directories (quote ("\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.git")))
+
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+(setq-default indicate-empty-lines t)
+(setq-default indicate-buffer-boundaries t)
+
+(setq frame-title-format "%b (%f)")
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
