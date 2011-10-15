@@ -225,7 +225,9 @@
 ;; Twitter
 ;;
 ;; http://www.emacswiki.org/emacs/TwitteringMode
-(defun inkel-twitter ()
+(defun inkel/open-twitter ()
+  "Open up my Twitter timeline"
+  (interactive)
   (add-to-list 'load-path "~/.emacs.d/vendors/twittering-mode/")
   (setq twittering-use-master-password t
         twittering-icon-mode t          ; Show icons
