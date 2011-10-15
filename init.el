@@ -270,3 +270,7 @@
   (erc :server "irc.freenode.net"
        :port 6667
        :nick "inkel"))
+
+(setq inkel/secure "~/.emacs.d/secure.el")
+(if (file-exists-p inkel/secure)
+    (load inkel/secure))
