@@ -50,7 +50,8 @@
 (set-background-color "#000000")
 (set-cursor-color "#ff0000")
 
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))
+(if (eq (system-name) "roke")
+    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12")))
 
 ;; Get back font antialiasing
 (push '(font-backend xft x) default-frame-alist)
