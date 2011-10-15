@@ -37,3 +37,6 @@
 [submodule "vendors/jade-mode"]
 	path = vendors/jade-mode
 	url = https://github.com/brianc/jade-mode.git
+[submodule "vendors/twittering-mode"]
+	path = vendors/twittering-mode
+	url = git://github.com/hayamiz/twittering-mode.git

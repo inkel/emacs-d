@@ -192,10 +192,9 @@
 (add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
 (setq espresso-indent-level 2)
 
-;; Disable annoying ido-mode feature that will try open an existing
-;; file of the same name
 (setq ido-use-url-at-point nil
       ido-everywhere t
+      ido-use-url-at-point nil
       ido-ignore-buffers (quote ("\\` " "\\*\\w+\\*"))
       ido-ignore-directories (quote ("\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.git")))
 
@@ -209,3 +208,25 @@
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "google-chrome")
+
+;; Twitter
+;;
+;; http://www.emacswiki.org/emacs/TwitteringMode
+(defun inkel-twitter ()
+  (add-to-list 'load-path "~/.emacs.d/vendors/twittering-mode/")
+  (setq twittering-use-master-password t
+        twittering-icon-mode t          ; Show icons
+        twittering-timer-interval 300   ; Update your timeline each 300 seconds (5 minutes)
+        twittering-url-show-status nil) ; Keeps the echo area from showing all the http processes
+  (require 'twittering-mode)
+  (twit))
+
+(add-hook 'twittering-mode-hook
+          (lambda ()
+            (linum-mode nil)))
+
+;; Check spelling
+(add-hook 'twittering-edit-mode-hook
+          (lambda ()
+            (ispell-minor-mode)
+            (flyspell-mode)))
