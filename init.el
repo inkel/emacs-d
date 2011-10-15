@@ -100,12 +100,13 @@
 (global-set-key [s-down]  'windmove-down)
 
 ;;; Auto-complete
-(add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
-(require 'auto-complete-config)
-(global-auto-complete-mode t)
-(setq ac-auto-start t)
-(setq ac-dwim 3)
-(setq ac-override-local-map nil)
+;; (add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
+;; (require 'auto-complete-config)
+;; (global-auto-complete-mode t)
+;; (setq ac-auto-start t)
+;; (setq ac-dwim 3)
+;; (setq ac-override-local-map nil)
+(setq tab-always-indent 'complete)
 
 ;;; Hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
