@@ -206,8 +206,21 @@
 
 (setq frame-title-format "%b (%f)")
 
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+;; Set preferred browser
+(defvar inkel/preferred-browsers (quote ("google-chrome"
+                                         "chromium-browser"
+                                         "firefox")))
+
+(defvar inkel/preferred-browser nil)
+
+(dolist (browser inkel/preferred-browsers)
+  (if (and (eq inkel/preferred-browser nil)
+           (executable-find browser))
+      (setq inkel/preferred-browser (executable-find browser))))
+
+(if (not (eq inkel/preferred-browser nil))
+    (setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program inkel/preferred-browser))
 
 ;; Twitter
 ;;
