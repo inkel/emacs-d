@@ -1,7 +1,7 @@
 (require 'cl)
 
-(setq byte-compile-warnings t)
-(load-file "~/.emacs.d/site-lisp/byte-code-cache.el")
+;; (setq byte-compile-warnings t)
+;; (load-file "~/.emacs.d/site-lisp/byte-code-cache.el")
 
 ;;; Editor options
 (savehist-mode t)
