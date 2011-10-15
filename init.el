@@ -90,6 +90,9 @@
 (global-set-key (kbd "C-z") 'nil)
 (global-set-key (kbd "C-x C-z") 'nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "M-g") 'goto-line)
+
+(global-set-key (kbd "C-c l") 'org-todo)
 
 (global-set-key [s-left]  'windmove-left)
 (global-set-key [s-right] 'windmove-right)
