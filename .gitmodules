@@ -40,3 +40,6 @@
 [submodule "vendors/twittering-mode"]
 	path = vendors/twittering-mode
 	url = git://github.com/hayamiz/twittering-mode.git
+[submodule "vendors/emacs-color-theme-solarized"]
+	path = vendors/emacs-color-theme-solarized
+	url = https://github.com/sellout/emacs-color-theme-solarized.git
