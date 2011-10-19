@@ -35,4 +35,6 @@
   (message "Using color theme: %s" inkel/color-theme-current)
   (apply (symbol-function inkel/color-theme-current) '()))
 
+(color-theme-solarized-light)
+
 (provide 'inkel/color-theme)
