@@ -3,13 +3,17 @@
 
 (setq color-theme-is-global t)
 
+(add-to-list 'load-path "~/.emacs.d/vendors/emacs-color-theme-solarized")
+(require 'color-theme-solarized)
+
 (defvar inkel/color-themes)
 (defvar inkel/color-theme-current)
 
 (defun inkel/color-themes-reset ()
   "Reset the color theme list"
   (interactive)
-  (setq inkel/color-themes '(color-theme-subtle-hacker
+  (setq inkel/color-themes '(color-theme-solarized-light
+                             color-theme-subtle-hacker
                              color-theme-jonadabian-slate
                              color-theme-kingsajz
                              color-theme-gnome2
@@ -30,5 +34,7 @@
   (setq inkel/color-themes (cons inkel/color-theme-current (butlast inkel/color-themes)))
   (message "Using color theme: %s" inkel/color-theme-current)
   (apply (symbol-function inkel/color-theme-current) '()))
+
+(color-theme-solarized-light)
 
 (provide 'inkel/color-theme)
