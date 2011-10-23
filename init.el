@@ -231,3 +231,8 @@
 (setq inkel/secure "~/.emacs.d/secure.el")
 (if (file-exists-p inkel/secure)
     (load inkel/secure))
+
+;;; Analyze script hash-bang and mark it as executable if possible on
+;;; first save
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
