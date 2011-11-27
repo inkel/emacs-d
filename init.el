@@ -100,6 +100,9 @@
 (global-set-key [s-up]    'windmove-up)
 (global-set-key [s-down]  'windmove-down)
 
+(if (string= "darwin" system-type)
+    (windmove-default-keybindings 'meta))
+
 ;;; Auto-complete
 ;; (add-to-list 'load-path "~/.emacs.d/vendors/auto-complete/")
 ;; (require 'auto-complete-config)
