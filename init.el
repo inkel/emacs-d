@@ -239,3 +239,5 @@
 ;;; first save
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
+
+(load "~/.emacs.d/inkel/flymake")
