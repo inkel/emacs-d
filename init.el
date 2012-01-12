@@ -240,4 +240,9 @@
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
 
+(add-hook 'text-mode-hook
+          (lambda ()
+            (flyspell-mode t)
+            (auto-fill-mode t)))
+
 (load "~/.emacs.d/inkel/flymake")
