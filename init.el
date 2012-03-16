@@ -30,8 +30,6 @@
 (setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
 (prefer-coding-system 'utf-8)
-(require 'color-theme)
-(setq color-theme-is-global t)
 (scroll-bar-mode -1)
 (setq x-select-enable-clipboard t)
 
