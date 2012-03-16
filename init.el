@@ -246,3 +246,5 @@
             (auto-fill-mode nil)))
 
 (load "~/.emacs.d/inkel/flymake")
+
+(add-to-list 'auto-mode-alist '("\\.mote$" . html-mode))
