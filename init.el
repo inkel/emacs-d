@@ -243,6 +243,6 @@
 (add-hook 'text-mode-hook
           (lambda ()
             (flyspell-mode t)
-            (auto-fill-mode t)))
+            (auto-fill-mode nil)))
 
 (load "~/.emacs.d/inkel/flymake")
