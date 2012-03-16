@@ -30,16 +30,19 @@
 (setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
 (prefer-coding-system 'utf-8)
-(scroll-bar-mode -1)
+(when (functionp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
 (setq x-select-enable-clipboard t)
 
 ;;; Visual configurations
 (progn
-  (tool-bar-mode -1)
+  (when (functionp 'tool-bar-mode)
+    (tool-bar-mode -1))
   (menu-bar-mode -1))
 (global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
-(global-linum-mode t)
+(when (functionp 'global-linum-mode)
+  (global-linum-mode t))
 '(transient-mark-mode t)
 (setq query-replace-highlight t)
 (setq search-highlight t)
