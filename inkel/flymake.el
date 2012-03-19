@@ -75,7 +75,7 @@
          (local-file (file-relative-name
                       temp-file
                       (file-name-directory buffer-file-name))))
-    (list "jslint" (list local-file))))
+    (list "/usr/local/bin/jslint" (list local-file))))
 
 (push '("^  [[:digit:]]+ \\([[:digit:]]+\\),\\([[:digit:]]+\\): \\(.+\\)$"
         nil 1 2 3)
