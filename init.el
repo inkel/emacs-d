@@ -249,3 +249,7 @@
 (load "~/.emacs.d/inkel/flymake")
 
 (add-to-list 'auto-mode-alist '("\\.mote$" . html-mode))
+
+(load "~/.emacs.d/vendors/rvm.el/rvm")
+(require 'rvm)
+(rvm-autodetect-ruby)

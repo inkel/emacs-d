@@ -43,3 +43,6 @@
 [submodule "vendors/emacs-color-theme-solarized"]
 	path = vendors/emacs-color-theme-solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "vendors/rvm.el"]
+	path = vendors/rvm.el
+	url = https://github.com/senny/rvm.el.git
