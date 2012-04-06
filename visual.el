@@ -45,4 +45,8 @@
 ;; Highlight current line
 (global-hl-line-mode t)
 
+;; Theme
+(if (functionp 'load-theme)
+    (load-theme 'misterioso))
+
 (provide 'visual)
