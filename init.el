@@ -135,10 +135,10 @@
 
 (add-hook 'ruby-mode-hook
           (lambda ()
-            (add-hook 'local-write-file-hooks
-                      '(lambda()
-                         (save-excursion
-                           (untabify (point-min) (point-max)))))
+            ;; (add-hook 'local-write-file-hooks
+            ;;           '(lambda()
+            ;;              (save-excursion
+            ;;                (untabify (point-min) (point-max)))))
             (require 'ruby-electric)
             (ruby-electric-mode t)
             (require 'ruby-block)
