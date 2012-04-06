@@ -10,4 +10,7 @@
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-x C-z") nil)
 
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
+
 (provide 'bindings)
