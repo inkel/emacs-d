@@ -16,4 +16,8 @@
 ;; Magit
 (vendor 'magit)
 
+;; Textmate mode
+(vendor 'textmate)
+(textmate-mode t)
+
 (provide 'modes)
