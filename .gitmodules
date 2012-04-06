@@ -4,3 +4,12 @@
 [submodule "vendor/textmate"]
 	path = vendor/textmate
 	url = https://github.com/defunkt/textmate.el.git
+[submodule "vendor/rvm"]
+	path = vendor/rvm
+	url = https://github.com/senny/rvm.el.git
+[submodule "vendor/ruby-electric"]
+	path = vendor/ruby-electric
+	url = https://github.com/qoobaa/ruby-electric.git
+[submodule "vendor/yaml-mode"]
+	path = vendor/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git
