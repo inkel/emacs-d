@@ -41,4 +41,8 @@
 (vendor 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
+;; Haml & Sass
+(vendor 'haml-mode)
+(vendor 'sass-mode)
+
 (provide 'modes)
