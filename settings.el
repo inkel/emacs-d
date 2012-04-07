@@ -32,6 +32,9 @@
 (savehist-mode t)
 (setq savehist-file "~/.emacs.d/.savehist")
 
+;; Disable backups
+(setq backup-inhibited t)
+
 ;; Tab either indents or complete
 (setq tab-always-indent 'complete)
 
