@@ -2,10 +2,6 @@
 (setq startup-screen-inhibit-startup-screen t)
 (setq inhibit-startup-screen t)
 
-;; Save minibuffer history across sessions
-(savehist-mode t)
-(setq savehist-file "~/.emacs.d/.savehist")
-
 ;; Delete selected text if overwritten
 (delete-selection-mode t)
 
@@ -29,8 +25,12 @@
 
 ;; Save cursor position within files
 (require 'saveplace)
-(setq-default save-place t)   
+(setq-default save-place t)
 (setq save-place-file "~/.emacs.d/.saveplace")
+
+;; Save minibuffer history across sessions
+(savehist-mode t)
+(setq savehist-file "~/.emacs.d/.savehist")
 
 ;; Tab either indents or complete
 (setq tab-always-indent 'complete)
