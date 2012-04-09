@@ -50,6 +50,10 @@
 
 ;; Theme
 (if (functionp 'load-theme)
-    (load-theme 'misterioso))
+    (if (file-exists-p "~/.emacs.d/vendor/emacs-color-theme-solarized")
+        (progn
+          (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor/emacs-color-theme-solarized")
+          (load-theme 'solarized-dark))
+      (load-theme 'misterioso)))
 
 (provide 'visual)
