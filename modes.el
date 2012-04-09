@@ -13,6 +13,11 @@
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
 
+;; JavaScript
+(defun inkel/javascript-mode-hook ()
+  (setq js-indent-level 2))
+(add-hook 'js-mode-hook 'inkel/javascript-mode-hook)
+
 ;; Magit
 (vendor 'magit)
 
