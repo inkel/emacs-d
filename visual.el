@@ -1,3 +1,6 @@
+;; Default font
+(set-face-attribute 'default nil :family "Menlo")
+
 ;; Hide toolbar, menu and scrollbars
 (tool-bar-mode -1)
 (menu-bar-mode -1)
