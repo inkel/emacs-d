@@ -23,14 +23,14 @@
 ;; Reload files when changed
 (global-auto-revert-mode 1)
 
+;; Save minibuffer history across sessions
+(setq savehist-file "~/.emacs.d/.savehist")
+(savehist-mode t)
+
 ;; Save cursor position within files
 (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file "~/.emacs.d/.saveplace")
-
-;; Save minibuffer history across sessions
-(savehist-mode t)
-(setq savehist-file "~/.emacs.d/.savehist")
 
 ;; Disable backups
 (setq backup-inhibited t)
