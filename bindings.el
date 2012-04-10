@@ -7,7 +7,7 @@
 
 (global-set-key (kbd "<f12>") 'ido-mode)
 (global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-x Cb") 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Do not send to background/minimize
 (global-set-key (kbd "C-z") nil)
