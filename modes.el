@@ -5,7 +5,7 @@
       ido-use-filename-at-point nil
       ido-enable-flex-matching t
       ido-everywhere t
-      ido-ignore-buffers (quote ("\\` " "\\*\\w+\\*"))
+      ido-ignore-buffers (quote ("\\` " "\\*\\(Messages\\|scratch\\|Help\\|Completions\\)\\*" "\\*magit-"))
       ido-ignore-directories (quote ("\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.git")))
 
 ;; Analyze script hash-bang and mark it as executable if possible on
