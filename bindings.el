@@ -2,6 +2,9 @@
 (if (string= "darwin" system-type)
     (windmove-default-keybindings 'meta))
 
+;; Do not close Emacs on Command-q
+(global-set-key (kbd "s-q") nil)
+
 (global-set-key (kbd "<f12>") 'ido-mode)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-x Cb") 'ibuffer)
