@@ -19,4 +19,6 @@
 ;; Textmate
 (global-set-key (kbd "C-x t") 'textmate-clear-cache)
 
+(global-set-key (kbd "C-M-;") 'toggle-comment-line)
+
 (provide 'bindings)

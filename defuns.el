@@ -12,4 +12,13 @@
      ((file-exists-p suffix)
       (require library)))))
 
+(defun toggle-comment-line ()
+  "Toggle comment on current line."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (push-mark (point-at-eol) nil t)
+    (comment-dwim t)
+    (pop-mark)))
+
 (provide 'defuns)
