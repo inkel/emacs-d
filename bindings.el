@@ -21,4 +21,10 @@
 
 (global-set-key (kbd "C-M-;") 'toggle-comment-line)
 
+;; Resize windows
+(global-set-key (kbd "C-s-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-s-<left>")  'shrink-window-horizontally)
+(global-set-key (kbd "C-s-<down>")  'enlarge-window)
+(global-set-key (kbd "C-s-<up>")    'shrink-window)
+
 (provide 'bindings)
