@@ -22,3 +22,6 @@
 [submodule "vendor/emacs-color-theme-solarized"]
 	path = vendor/emacs-color-theme-solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "vendor/powerline"]
+	path = vendor/powerline
+	url = https://github.com/jonathanchu/emacs-powerline.git
