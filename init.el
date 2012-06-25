@@ -5,9 +5,9 @@
 (if (file-exists-p custom-file)
     (load custom-file))
 
+(require 'defuns)
 (require 'settings)
 (require 'visual)
 (require 'bindings)
 (require 'editing)
-(require 'defuns)
 (require 'modes)
