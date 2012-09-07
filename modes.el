@@ -51,4 +51,9 @@
 (vendor 'haml-mode)
 (vendor 'sass-mode)
 
+;; Markdown
+(autoload 'markdown-mode "vendor/markdown-mode/markdown-mode.el"
+  "Major mode for editing Markdown files" t)
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+
 (provide 'modes)
