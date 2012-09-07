@@ -27,4 +27,8 @@
 (global-set-key (kbd "C-s-<down>")  'enlarge-window)
 (global-set-key (kbd "C-s-<up>")    'shrink-window)
 
+;; Tab autocomplete
+;; http://gastonramos.wordpress.com/2012/05/22/emacs-autocomplete-con-tab/
+; (global-set-key [(tab)] 'smart-tab)
+
 (provide 'bindings)
