@@ -38,4 +38,8 @@
 ;; Tab either indents or complete
 (setq tab-always-indent 'complete)
 
+;; Add brew binaries to PATH
+(add-to-list 'exec-path "/usr/local/bin")
+(setq ispell-program-name "aspell")
+
 (provide 'settings)
