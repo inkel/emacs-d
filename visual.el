@@ -56,9 +56,4 @@
           (load-theme 'solarized-dark))
       (load-theme 'misterioso)))
 
-(vendor 'powerline)
-(custom-set-faces
- '(mode-line ((t (:foreground "#030303" :background "#bdbdbd" :box nil))))
- '(mode-line-inactive ((t (:foreground "#f9f9f9" :background "#666666" :box nil)))))
-
 (provide 'visual)
