@@ -26,9 +26,6 @@
 (textmate-mode t)
 
 ;; Ruby and related modes
-(vendor 'rvm)
-(rvm-autodetect-ruby)
-
 (vendor 'ruby-electric)
 
 (add-to-list 'auto-mode-alist '("\\.rake$"    . ruby-mode))
