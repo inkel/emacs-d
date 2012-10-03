@@ -53,6 +53,12 @@
 ;; Blink cursor
 (blink-cursor-mode t)
 
+;; Minibuffer
+(setq enable-recursive-minibuffers nil ;;  allow mb cmds in the mb
+      max-mini-window-height .25       ;;  max 2 lines
+      minibuffer-scroll-window nil
+      resize-mini-windows nil)
+
 ;; Highlight current line
 (global-hl-line-mode t)
 
