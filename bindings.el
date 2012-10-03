@@ -1,6 +1,9 @@
 ;; Move through windows using meta-<arrows>
-(if (string= "darwin" system-type)
-    (windmove-default-keybindings 'meta))
+(when (string= "darwin" system-type)
+  (global-set-key (kbd "s-<right>") 'windmove-right)
+  (global-set-key (kbd "s-<left>")  'windmove-left)
+  (global-set-key (kbd "s-<up>")    'windmove-up)
+  (global-set-key (kbd "s-<down>")  'windmove-down))
 
 ;; Do not close Emacs on Command-q
 (global-set-key (kbd "s-q") nil)
