@@ -1,5 +1,6 @@
 ;; Default font
-(set-face-attribute 'default nil :family "Menlo")
+(condition-case nil
+    (set-face-attribute 'default nil :family "Monaco" :height 140))
 
 (when (display-graphic-p)
   ;; Hide toolbar, menu and scrollbars
