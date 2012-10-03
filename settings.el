@@ -24,8 +24,8 @@
 (global-auto-revert-mode 1)
 
 ;; Save minibuffer history across sessions
-(setq savehist-file "~/.emacs.d/.savehist")
-(savehist-mode t)
+;; (setq savehist-file "~/.emacs.d/.savehist")
+;; (savehist-mode t)
 
 ;; Save cursor position within files
 (require 'saveplace)
