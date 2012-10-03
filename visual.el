@@ -1,10 +1,16 @@
 ;; Default font
 (set-face-attribute 'default nil :family "Menlo")
 
-;; Hide toolbar, menu and scrollbars
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(when (display-graphic-p)
+  ;; Hide toolbar, menu and scrollbars
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (if (file-exists-p "~/.emacs.d/vendor/emacs-color-theme-solarized")
+      (progn
+        (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor/emacs-color-theme-solarized")
+        (load-theme 'solarized-dark))
+    (load-theme 'misterioso)))
 
 ;; Use unique buffer names
 (require 'uniquify)
@@ -40,20 +46,13 @@
 (global-hi-lock-mode t)
 
 ;; Indicate line number on the left side
-(global-linum-mode t)
+(if (functionp 'global-linum-mode)
+    (global-linum-mode t))
 
 ;; Blink cursor
 (blink-cursor-mode t)
 
 ;; Highlight current line
 (global-hl-line-mode t)
-
-;; Theme
-(if (functionp 'load-theme)
-    (if (file-exists-p "~/.emacs.d/vendor/emacs-color-theme-solarized")
-        (progn
-          (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor/emacs-color-theme-solarized")
-          (load-theme 'solarized-dark))
-      (load-theme 'misterioso)))
 
 (provide 'visual)
