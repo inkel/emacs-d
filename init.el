@@ -10,8 +10,8 @@
 (require 'visual)
 (require 'bindings)
 (require 'editing)
-(require 'modes)
 (require 'packages)
+(require 'modes)
 
 (unless (server-running-p)
   (server-start))

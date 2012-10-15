@@ -3,5 +3,6 @@
     (package-install package-name)))
 
 (use-package 'multiple-cursors)
+(use-package 'mote-mode)
 
 (provide 'packages)

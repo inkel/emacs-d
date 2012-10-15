@@ -53,4 +53,8 @@
   "Major mode for editing Markdown files" t)
 (setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
 
+(require 'mote-mode)
+(add-to-list 'auto-mode-alist '("\\.mote$" . html-mode))
+(add-hook 'html-mode-hook 'mote-mode)
+
 (provide 'modes)
