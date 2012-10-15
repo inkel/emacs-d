@@ -35,4 +35,11 @@
 ;; http://gastonramos.wordpress.com/2012/05/22/emacs-autocomplete-con-tab/
 ; (global-set-key [(tab)] 'smart-tab)
 
+;; Multiple cursors
+;; https://github.com/magnars/multiple-cursors.el
+(global-set-key (kbd "C->")         'mc/mark-next-like-this)
+(global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C->")     'mc/mark-all-like-this)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
 (provide 'bindings)
