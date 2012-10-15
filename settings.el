@@ -42,4 +42,9 @@
 (add-to-list 'exec-path "/usr/local/bin")
 (setq ispell-program-name "aspell")
 
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
 (provide 'settings)

@@ -11,6 +11,7 @@
 (require 'bindings)
 (require 'editing)
 (require 'modes)
+(require 'packages)
 
 (unless (server-running-p)
   (server-start))
