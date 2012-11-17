@@ -8,6 +8,10 @@
       ido-ignore-buffers (quote ("\\` " "\\*\\(Messages\\|scratch\\|Help\\|Completions\\)\\*" "\\*magit-"))
       ido-ignore-directories (quote ("\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.git")))
 
+;; Smex
+(require 'smex)
+(smex-initialize)
+
 ;; Analyze script hash-bang and mark it as executable if possible on
 ;; first save
 (add-hook 'after-save-hook
