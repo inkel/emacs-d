@@ -8,6 +8,9 @@
 ;; Do not close Emacs on Command-q
 (global-set-key (kbd "s-q") nil)
 
+;; Do not display print dialog
+(global-set-key (kbd "s-p") nil)
+
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "<f12>") 'ido-mode)
 (global-set-key (kbd "M-g") 'goto-line)
