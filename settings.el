@@ -2,6 +2,9 @@
 (setq startup-screen-inhibit-startup-screen t)
 (setq inhibit-startup-screen t)
 
+;; Disable annoying message on some commands
+(setq disabled-command-function nil)
+
 ;; Delete selected text if overwritten
 (delete-selection-mode t)
 
