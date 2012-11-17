@@ -20,6 +20,9 @@
 
 ;; Magit
 (vendor 'magit)
+(add-hook 'magit-log-edit-mode-hook (lambda ()
+                                      (setq fill-column 72)
+                                      (turn-on-auto-fill)))
 
 ;; Textmate mode
 (vendor 'textmate)
@@ -56,5 +59,19 @@
 (require 'mote-mode)
 (add-to-list 'auto-mode-alist '("\\.mote$" . html-mode))
 (add-hook 'html-mode-hook 'mote-mode)
+
+;; Magit
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores previous window configuration and kills magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+
+(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 (provide 'modes)
