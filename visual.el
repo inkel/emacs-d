@@ -64,4 +64,7 @@
 ;; Highlight current line
 (global-hl-line-mode t)
 
+;; Small fringes
+(set-fringe-mode '(1 . 1))
+
 (provide 'visual)
