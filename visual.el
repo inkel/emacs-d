@@ -16,6 +16,8 @@
 ;; Use unique buffer names
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
+(setq uniquify-strip-common-suffix nil)
+(setq uniquify-after-kill-buffer-p t)
 
 ;; Highlight parenthesis/brackets
 (require 'paren)
