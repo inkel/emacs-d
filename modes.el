@@ -48,12 +48,13 @@
 (add-hook 'ruby-mode-hook (lambda ()
                             (ruby-electric-mode t)))
 
-(vendor 'yaml-mode)
+(autoload 'yaml-mode "~/.emacs.d/vendor/yaml-mode/yaml-mode.el")
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;; Haml & Sass
 (vendor 'haml-mode)
-(vendor 'sass-mode)
+(autoload 'sass-mode "~/.emacs.d/vendor/sass-mode/sass-mode.el")
+(add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
 
 ;; Markdown
 (autoload 'markdown-mode "vendor/markdown-mode/markdown-mode.el"
