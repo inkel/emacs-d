@@ -35,6 +35,11 @@
 (setq-default save-place t)
 (setq save-place-file "~/.emacs.d/.saveplace")
 
+;; Remember Emacs session
+(setq desktop-path '("~/.emacs.d/"))
+(setq desktop-save 'ask-if-new)
+(desktop-save-mode 1)
+
 ;; Disable backups
 (setq backup-inhibited t)
 
