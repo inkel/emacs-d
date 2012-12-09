@@ -9,3 +9,5 @@
 (require 'package)
 (package-initialize)
 (require 'git-commit-mode)
+(add-hook 'git-commit-mode-hook (lambda ()
+                                  (flyspell-mode t)))
