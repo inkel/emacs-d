@@ -24,9 +24,11 @@
 
 ;; Magit
 (vendor 'magit)
-(add-hook 'magit-log-edit-mode-hook (lambda ()
-                                      (setq fill-column 72)
-                                      (turn-on-auto-fill)))
+(defun inkel/magit-log-edit-mode-hook ()
+  (setq fill-column 72)
+  (flyspell-mode t)
+  (turn-on-auto-fill))
+(add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
 
 ;; Textmate mode
 (vendor 'textmate)
