@@ -13,5 +13,8 @@
 (require 'packages)
 (require 'modes)
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 (unless (server-running-p)
   (server-start))
