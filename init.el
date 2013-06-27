@@ -16,5 +16,9 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
+(setq citrusbyte-file "~/.emacs.d/citrusbyte.el")
+(if (file-exists-p citrusbyte-file)
+    (load citrusbyte-file))
+
 (unless (server-running-p)
   (server-start))
