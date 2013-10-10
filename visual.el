@@ -7,6 +7,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+  (global-hl-line-mode t) ;; Highlight current line
   (if (file-exists-p "~/.emacs.d/vendor/emacs-color-theme-solarized")
       (progn
         (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor/emacs-color-theme-solarized")
@@ -60,9 +61,6 @@
       max-mini-window-height .25       ;;  max 2 lines
       minibuffer-scroll-window nil
       resize-mini-windows nil)
-
-;; Highlight current line
-(global-hl-line-mode t)
 
 ;; Small fringes
 (set-fringe-mode '(1 . 1))
