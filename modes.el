@@ -67,6 +67,9 @@
 (add-to-list 'auto-mode-alist '("\\.mote$" . html-mode))
 (add-hook 'html-mode-hook 'mote-mode)
 
+(autoload 'nginx-mode "~/.emacs.d/vendor/nginx-mode.el")
+(add-to-list 'auto-mode-alist '("\\.nginx$"     . nginx-mode))
+
 ;; Magit
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
