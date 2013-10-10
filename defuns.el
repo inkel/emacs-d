@@ -47,4 +47,19 @@
           (dabbrev-expand nil)
         (indent-for-tab-command)))))
 
+;; Join next line or join all lines in region
+;; https://gist.github.com/gonz/5874226
+(defun smart-join-line ()
+  "Join the current line with the line beneath it or all region lines."
+  (interactive)
+  (if (use-region-p)
+      (save-excursion
+        (let ((start-line (line-number-at-pos (region-beginning)))
+              (current-line (line-number-at-pos (region-end))))
+          (goto-char (region-end))
+          (while (> current-line start-line)
+            (join-line)
+            (setq current-line (line-number-at-pos)))))
+    (delete-indentation 1)))
+
 (provide 'defuns)
