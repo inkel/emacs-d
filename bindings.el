@@ -23,23 +23,13 @@
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; Textmate
-(global-set-key (kbd "C-x t") 'textmate-clear-cache)
-
-(global-set-key (kbd "C-M-;") 'toggle-comment-line)
-
 ;; Resize windows
 (global-set-key (kbd "C-s-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-s-<left>")  'shrink-window-horizontally)
 (global-set-key (kbd "C-s-<down>")  'enlarge-window)
 (global-set-key (kbd "C-s-<up>")    'shrink-window)
 
-;; Tab autocomplete
-;; http://gastonramos.wordpress.com/2012/05/22/emacs-autocomplete-con-tab/
-; (global-set-key [(tab)] 'smart-tab)
-
 ;; Multiple cursors
-;; https://github.com/magnars/multiple-cursors.el
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
 (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C->")     'mc/mark-all-like-this)
@@ -52,7 +42,5 @@
 
 ;; Use C-x C-m to do M-x per Steve Yegge's advice
 (global-set-key (kbd "C-x C-m") 'smex)
-
-(global-set-key (kbd "C-M-j") 'smart-join-line)
 
 (provide 'bindings)

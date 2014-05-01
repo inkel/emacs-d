@@ -1,3 +1,7 @@
+;; Disable startup screen
+(setq startup-screen-inhibit-startup-screen t)
+(setq inhibit-startup-screen t)
+
 ;; Default font
 (condition-case nil
     (set-face-attribute 'default nil :family "Monaco" :height 140))
@@ -8,11 +12,7 @@
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (global-hl-line-mode t) ;; Highlight current line
-  (if (file-exists-p "~/.emacs.d/vendor/emacs-color-theme-solarized")
-      (progn
-        (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor/emacs-color-theme-solarized")
-        (load-theme 'solarized-dark))
-    (load-theme 'misterioso)))
+  (load-theme 'adwaita))
 
 ;; Use unique buffer names
 (require 'uniquify)
