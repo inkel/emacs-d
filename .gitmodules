@@ -1,30 +1,3 @@
-[submodule "vendor/magit"]
-	path = vendor/magit
-	url = https://github.com/magit/magit.git
-[submodule "vendor/textmate"]
-	path = vendor/textmate
-	url = https://github.com/defunkt/textmate.el.git
-[submodule "vendor/rvm"]
-	path = vendor/rvm
-	url = https://github.com/senny/rvm.el.git
-[submodule "vendor/ruby-electric"]
-	path = vendor/ruby-electric
-	url = https://github.com/qoobaa/ruby-electric.git
-[submodule "vendor/yaml-mode"]
-	path = vendor/yaml-mode
-	url = https://github.com/yoshiki/yaml-mode.git
-[submodule "vendor/haml-mode"]
-	path = vendor/haml-mode
-	url = https://github.com/nex3/haml-mode.git
-[submodule "vendor/sass-mode"]
-	path = vendor/sass-mode
-	url = https://github.com/nex3/sass-mode.git
-[submodule "vendor/emacs-color-theme-solarized"]
-	path = vendor/emacs-color-theme-solarized
-	url = https://github.com/sellout/emacs-color-theme-solarized.git
 [submodule "vendor/powerline"]
 	path = vendor/powerline
 	url = https://github.com/jonathanchu/emacs-powerline.git
-[submodule "vendor/markdown-mode"]
-	path = vendor/markdown-mode
-	url = git://jblevins.org/git/markdown-mode.git
