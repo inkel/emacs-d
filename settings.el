@@ -27,8 +27,8 @@
 (global-auto-revert-mode 1)
 
 ;; Save minibuffer history across sessions
-;; (setq savehist-file "~/.emacs.d/.savehist")
-;; (savehist-mode t)
+(setq savehist-file "~/.emacs.d/.savehist")
+(savehist-mode t)
 
 ;; Save cursor position within files
 (require 'saveplace)
@@ -36,9 +36,9 @@
 (setq save-place-file "~/.emacs.d/.saveplace")
 
 ;; Remember Emacs session
-(setq desktop-path '("~/.emacs.d/"))
-(setq desktop-save 'ask-if-new)
-(desktop-save-mode 1)
+;; (setq desktop-path '("~/.emacs.d/"))
+;; (setq desktop-save 'ask-if-new)
+;; (desktop-save-mode 1)
 
 ;; Disable backups
 (setq backup-inhibited t)
@@ -56,5 +56,7 @@
 (when (< emacs-major-version 24)
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
+
+(setq ag-highlight-search t)
 
 (provide 'settings)
