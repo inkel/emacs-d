@@ -16,5 +16,6 @@
 (use-package 'mote-mode)
 (use-package 'exec-path-from-shell)
 (use-package 'enh-ruby-mode)
+(use-package 'markdown-mode)
 
 (provide 'packages)
