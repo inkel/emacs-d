@@ -17,5 +17,6 @@
 (use-package 'exec-path-from-shell)
 (use-package 'enh-ruby-mode)
 (use-package 'markdown-mode)
+(use-package 'company)
 
 (provide 'packages)

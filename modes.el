@@ -59,4 +59,7 @@
 
 (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
+;; Company all the things!
+(add-hook 'after-init-hook 'global-company-mode)
+
 (provide 'modes)

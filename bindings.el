@@ -43,4 +43,7 @@
 ;; Use C-x C-m to do M-x per Steve Yegge's advice
 (global-set-key (kbd "C-x C-m") 'smex)
 
+;; Company mode
+(global-set-key (kbd "C-<tab>") 'company-complete)
+
 (provide 'bindings)
