@@ -12,7 +12,7 @@
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (global-hl-line-mode t) ;; Highlight current line
-  (load-theme 'adwaita))
+  (load-theme 'misterioso))
 
 ;; Use unique buffer names
 (require 'uniquify)
@@ -62,7 +62,7 @@
       minibuffer-scroll-window nil
       resize-mini-windows nil)
 
-;; Small fringes
-(set-fringe-mode '(1 . 1))
+;; No fringes
+(set-fringe-mode 0)
 
 (provide 'visual)
