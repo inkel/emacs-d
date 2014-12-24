@@ -46,4 +46,8 @@
 ;; Company mode
 (global-set-key (kbd "C-<tab>") 'company-complete)
 
+;; Text
+(global-set-key (kbd "s-=") 'text-scale-increase)
+(global-set-key (kbd "s--") 'text-scale-decrease)
+
 (provide 'bindings)
