@@ -38,6 +38,13 @@
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
 
+;;;; Company. Auto-completion.
+(use-package company
+  :ensure t
+  :bind (("C-<tab>" . company-complete))
+  :config
+  (global-company-mode))
+
 ;;;; magit
 (use-package magit
   :ensure t
