@@ -225,3 +225,11 @@
 
 ;; Left fringe is 4 pixels; right fringe is gone
 (fringe-mode '(4 . 0))
+
+;; org-mode
+(use-package org
+  :config
+  (progn
+    (setq-default org-display-custom-times t)
+    (setq org-time-stamp-custom-formats
+          '("<%Y-%m-%d>" . "<%Y/%m/%d %a %H:%M>"))))
