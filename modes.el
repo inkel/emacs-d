@@ -8,10 +8,6 @@
       ido-ignore-buffers (quote ("\\` " "\\*\\(Messages\\|scratch\\|Help\\|Completions\\)\\*" "\\*magit-" "\\*ag "))
       ido-ignore-directories (quote ("\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.git")))
 
-;; Smex
-(require 'smex)
-(smex-initialize)
-
 ;; Analyze script hash-bang and mark it as executable if possible on
 ;; first save
 (add-hook 'after-save-hook
@@ -23,12 +19,12 @@
 (add-hook 'js-mode-hook 'inkel/javascript-mode-hook)
 
 ;; Magit
-(require 'magit)
-(defun inkel/magit-log-edit-mode-hook ()
-  (setq fill-column 72)
-  (flyspell-mode t)
-  (turn-on-auto-fill))
-(add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
+;; (require 'magit)
+;; (defun inkel/magit-log-edit-mode-hook ()
+;;   (setq fill-column 72)
+;;   (flyspell-mode t)
+;;   (turn-on-auto-fill))
+;; (add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
 
 ;; Ruby and related modes
 (add-to-list 'auto-mode-alist '("\\.rake$"    . enh-ruby-mode))
@@ -46,20 +42,17 @@
 (add-hook 'html-mode-hook 'mote-mode)
 
 ;; Magit
-(defadvice magit-status (around magit-fullscreen activate)
-  (window-configuration-to-register :magit-fullscreen)
-  ad-do-it
-  (delete-other-windows))
+;; (defadvice magit-status (around magit-fullscreen activate)
+;;   (window-configuration-to-register :magit-fullscreen)
+;;   ad-do-it
+;;   (delete-other-windows))
 
-(defun magit-quit-session ()
-  "Restores previous window configuration and kills magit buffer"
-  (interactive)
-  (kill-buffer)
-  (jump-to-register :magit-fullscreen))
+;; (defun magit-quit-session ()
+;;   "Restores previous window configuration and kills magit buffer"
+;;   (interactive)
+;;   (kill-buffer)
+;;   (jump-to-register :magit-fullscreen))
 
-(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
-
-;; Company all the things!
-(add-hook 'after-init-hook 'global-company-mode)
+;; (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 (provide 'modes)

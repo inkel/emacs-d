@@ -6,6 +6,9 @@
 (condition-case nil
     (set-face-attribute 'default nil :family "Monaco" :height 140))
 
+(when (eq system-type 'darwin)
+      (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+
 (when (display-graphic-p)
   ;; Hide toolbar, menu and scrollbars
   (tool-bar-mode -1)

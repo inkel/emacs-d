@@ -8,6 +8,7 @@
         downcase-region
         enh-ruby-electric-brace
         go-mode-insert-and-indent
+        org-delete-char
         ruby-electric-curlies
         ruby-electric-space
         upcase-region

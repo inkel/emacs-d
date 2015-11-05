@@ -35,4 +35,8 @@
 ;; Highlight search results from ag
 (setq ag-highlight-search t)
 
+;; Org-Babel
+(setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
+(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+
 (provide 'settings)

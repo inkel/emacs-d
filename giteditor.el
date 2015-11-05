@@ -8,6 +8,7 @@
 
 (require 'package)
 (package-initialize)
-(require 'git-commit-mode)
-(add-hook 'git-commit-mode-hook (lambda ()
-                                  (flyspell-mode t)))
+;; (require 'git-commit-mode)
+;; (add-hook 'git-commit-hook (lambda ()
+;;                                   (flyspell-mode t)))
+(delete-selection-mode t)

@@ -12,8 +12,12 @@
 (require 'editing)
 (require 'bindings)
 
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+(setq scroll-margin 5
+      scroll-preserve-screen-position 1)
+
+;; org-mode
+(setq org-agenda-files '("~/dev/citrusbyte/m2x/m2x.org"))
+(global-set-key (kbd "C-x a") 'org-agenda)
 
 (unless (server-running-p)
   (server-start))
