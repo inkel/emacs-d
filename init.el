@@ -114,7 +114,7 @@
 	 ("C-x C-m" . smex))
   :config
   (smex-initialize))
-  
+
 ;; Load custom settings if present
 (setq custom-file "~/.emacs.d/custom.el")
 (if (file-exists-p custom-file)
