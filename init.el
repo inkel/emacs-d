@@ -73,6 +73,15 @@
   (progn
     (add-hook 'before-save-hook 'gofmt-before-save)))
 
+(use-package company-go
+  :ensure t
+  :config
+  (progn
+    (defun inkel/company-go-hook ()
+      (set (make-local-variable 'company-backends) '(company-go))
+      (company-mode t))
+    (add-hook 'go-mode-hook 'inkel/company-go-hook)))
+
 ;;;; Can't say how manyn times this saved me. SO useful.
 (use-package multiple-cursors
   :ensure t
