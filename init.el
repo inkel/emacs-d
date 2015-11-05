@@ -158,7 +158,7 @@
   :mode "Dockerfile\\'")
 
 ;; Edit nginx files
-(use-package nginx-mode)
+(use-package nginx-mode :ensure t)
 
 ;; OSX bindings
 (when (string= "darwin" system-type)
