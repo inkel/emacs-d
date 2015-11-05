@@ -55,6 +55,17 @@
       ad-do-it
       (delete-other-windows))))
 
+;;;; Go
+(use-package go-mode
+  :ensure t
+  :bind (("C-c C-r" . go-remove-unused-imports)
+	 ("C-c C-g" . go-goto-imports)
+	 ("C-c C-f" . gofmt)
+	 ("C-c C-k" . godoc))
+  :config
+  (progn
+    (add-hook 'before-save-hook 'gofmt-before-save)))
+
 ;;;; Can't say how manyn times this saved me. SO useful.
 (use-package multiple-cursors
   :ensure t
