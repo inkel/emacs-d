@@ -163,10 +163,10 @@
 ;; OSX bindings
 (when (string= "darwin" system-type)
   ;; Move through windows using meta-<arrows>
-  ;; (global-set-key (kbd "s-<right>") 'windmove-right)
-  ;; (global-set-key (kbd "s-<left>")  'windmove-left)
-  ;; (global-set-key (kbd "s-<up>")    'windmove-up)
-  ;; (global-set-key (kbd "s-<down>")  'windmove-down)
+  (global-set-key (kbd "s-<right>") 'windmove-right)
+  (global-set-key (kbd "s-<left>")  'windmove-left)
+  (global-set-key (kbd "s-<up>")    'windmove-up)
+  (global-set-key (kbd "s-<down>")  'windmove-down)
   ;; Do not close Emacs on Command-q
   (global-set-key (kbd "s-q") nil)
   ;; Do not display print dialog
