@@ -233,3 +233,7 @@
     (setq-default org-display-custom-times t)
     (setq org-time-stamp-custom-formats
           '("<%Y-%m-%d>" . "<%Y/%m/%d %a %H:%M>"))))
+
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yml$")
