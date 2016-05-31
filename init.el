@@ -155,6 +155,7 @@
 
 ;; Docker
 (use-package dockerfile-mode
+  :ensure t
   :mode "Dockerfile\\'")
 
 ;; Edit nginx files
