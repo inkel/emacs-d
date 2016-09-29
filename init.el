@@ -273,3 +273,13 @@
   :mode "\\.tf$"
   :config
   (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
+
+;; Stolen from http://ergoemacs.org/emacs/emacs_keybinding_power_of_keys_sequence.html
+(progn
+  (define-prefix-command 'inkel-map)
+  (define-key inkel-map (kbd "<f1>") 'linum-mode)
+  (define-key inkel-map (kbd "<f2>") 'whitespace-mode)
+  (define-key inkel-map (kbd "<f3>") 'flyspell-mode)
+  (define-key inkel-map (kbd "<f4>") 'auto-fill-mode)
+  )
+(global-set-key (kbd "<f9>") inkel-map)
