@@ -6,8 +6,10 @@
 (condition-case nil
     (set-face-attribute 'default nil :family "Monaco" :height 140))
 
-(when (eq system-type 'darwin)
-      (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+(cond ((eq system-type 'darwin)
+       (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+      ((eq system-type 'gnu/linux)
+       (set-face-attribute 'default nil :family "Droid Sans Mono" :height 100)))
 
 ;; Packages
 (require 'package)
