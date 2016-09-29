@@ -118,15 +118,22 @@
   (show-paren-mode t))
 
 ;;; M-x on steroids
-(use-package smex
+(use-package swiper
   :ensure t
-  :defer t
-  :bind (("M-x" . smex)
-	 ("M-X" . smex-major-mode-commands)
-	 ("C-c C-c M-x" . execute-extended-command)
-	 ("C-x C-m" . smex))
-  :config
-  (smex-initialize))
+  :bind (("C-s" . swiper)
+         ("C-r" . swiper))
+  :config (setq search-default-mode nil))
+(use-package counsel
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)))
+(use-package ivy
+  :ensure t
+  :config (progn
+            (setq ivy-use-virtual-buffers t
+                  ivy-height 10
+                  ivy-count-format "(%d/%d) ")
+            (ivy-mode 1)))
 
 ;; Load custom settings if present
 (setq custom-file "~/.emacs.d/custom.el")
