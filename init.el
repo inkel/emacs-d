@@ -283,3 +283,6 @@
   (define-key inkel-map (kbd "<f4>") 'auto-fill-mode)
   )
 (global-set-key (kbd "<f9>") inkel-map)
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "/usr/bin/google-chrome")
