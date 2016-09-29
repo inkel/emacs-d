@@ -5,9 +5,12 @@
       '(
         c-electric-lt-gt
         coffee-dedent-line-backspace
+        upcase-region
         downcase-region
         enh-ruby-electric-brace
         go-mode-insert-and-indent
+        kill-buffer
+        mark-word
         org-delete-char
         ruby-electric-curlies
         ruby-electric-space
@@ -17,7 +20,9 @@
 (setq mc/cmds-to-run-once
       '(
         beginning-of-buffer
+        counsel-find-file
         end-of-buffer
+        ido-switch-buffer
         kill-region
         magit-status
         markdown-exdent-or-delete
