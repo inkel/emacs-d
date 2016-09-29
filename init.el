@@ -173,7 +173,14 @@
          ("Guardfile"   . ruby-mode)
          ("Rakefile"    . ruby-mode)
          ("\\.builder$" . ruby-mode)
-         ("\\.god$"     . ruby-mode)))
+         ("\\.god$"     . ruby-mode))
+  :config (progn
+            (add-hook 'ruby-mode-hook 'minitest-mode)))
+
+(use-package minitest
+  :ensure t
+  :config (progn
+            (setq minitest-use-bundler nil)))
 
 ;; Docker
 (use-package dockerfile-mode
