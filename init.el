@@ -166,14 +166,14 @@
 ;; Ruby Ruby Ruby... ooooohhh ooohh ooooh
 (use-package ruby-mode
   :mode (("\\.rake$"    . ruby-mode)
-	 ("\\.ru$"      . ruby-mode)
-	 ("\\.gemspec$" . ruby-mode)
-	 ("Gemfile"     . ruby-mode)
-	 ("Thorfile"    . ruby-mode)
-	 ("Guardfile"   . ruby-mode)
-	 ("Rakefile"    . ruby-mode)
-	 ("\\.builder$" . ruby-mode)
-	 ("\\.god$"     . ruby-mode)))
+         ("\\.ru$"      . ruby-mode)
+         ("\\.gemspec$" . ruby-mode)
+         ("Gemfile"     . ruby-mode)
+         ("Thorfile"    . ruby-mode)
+         ("Guardfile"   . ruby-mode)
+         ("Rakefile"    . ruby-mode)
+         ("\\.builder$" . ruby-mode)
+         ("\\.god$"     . ruby-mode)))
 
 ;; Docker
 (use-package dockerfile-mode
