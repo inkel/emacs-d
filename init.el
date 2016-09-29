@@ -74,7 +74,7 @@
   :config
   (progn
     (setenv "GOPATH" "/home/inkel/dev/go")
-    (setq gofmt-command "~/dev/go/bin/goimports")
+    (setq gofmt-command "/home/inkel/dev/go/bin/goimports")
     (add-hook 'before-save-hook 'gofmt-before-save)))
 
 (use-package go-guru
@@ -85,13 +85,13 @@
             (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)))
 
 (use-package golint
-  :load-path "~/dev/go/src/github.com/golang/lint/misc/emacs")
+  :load-path "/home/inkel/dev/go/src/github.com/golang/lint/misc/emacs")
 
 (use-package company-go
   :ensure t
   :config
   (progn
-    (setq company-go-gocode-command "~/dev/go/bin/gocode")
+    (setq company-go-gocode-command "/home/inkel/dev/go/bin/gocode")
     (defun inkel/company-go-hook ()
       (set (make-local-variable 'company-backends) '(company-go))
       (company-mode t))
