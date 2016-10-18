@@ -260,6 +260,12 @@
 (use-package org
   :config
   (progn
+    (setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "grey"))
+        ("DONE" . (:foreground "#00aa00"))
+        ("WIP" . (:foreground "yellow"))
+        ("BLOCKED" . (:foreground "red" :weight "bold"))
+        ("CANCELED" . (:foreground "red" :strike-through t))))
     (setq-default org-display-custom-times t)
     (setq org-time-stamp-custom-formats
           '("<%Y-%m-%d>" . "<%Y/%m/%d %a %H:%M>"))))
