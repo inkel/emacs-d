@@ -73,6 +73,8 @@
 	 ("C-c C-k" . godoc))
   :config
   (progn
+    (unless (member "/usr/local/go/bin" (split-string (getenv "PATH") ":"))
+      (setenv "PATH" (concat "/usr/local/go/bin:" (getenv "PATH"))))
     (setenv "GOPATH" "/home/inkel/dev/go")
     (setq gofmt-command "/home/inkel/dev/go/bin/goimports")
     (add-hook 'before-save-hook 'gofmt-before-save)))
