@@ -47,6 +47,20 @@
   :config
   (global-company-mode))
 
+;;; GnuPG - automatic passphrase
+(defun load-gpg-agent-info ()
+  (interactive)
+  (let* ((agent-info-file (or (getenv "GPG_AGENT_INFO_FILE")
+                              (concat (getenv "HOME") "/.gpg-agent-info")))
+         (contents (with-temp-buffer
+                     (insert-file-contents agent-info-file)
+                     (buffer-string)))
+         (agent-info (substring (cadr (split-string contents "=")) 0 -1))
+
+         )
+    (message (format "Setting GPG_AGENT_INFO=%s" agent-info))
+    (setenv "GPG_AGENT_INFO" agent-info)))
+
 ;;;; magit
 (use-package magit
   :ensure t
