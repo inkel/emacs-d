@@ -294,3 +294,10 @@
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "/usr/bin/google-chrome")
+
+;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
+;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
+(use-package crux
+  :ensure t
+  :bind (("C-c o" . crux-open-with)
+         ("C-a" . crux-move-beginning-of-line)))
