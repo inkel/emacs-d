@@ -301,3 +301,15 @@
   :ensure t
   :bind (("C-c o" . crux-open-with)
          ("C-a" . crux-move-beginning-of-line)))
+;; http://pragmaticemacs.com/emacs/resize-your-windows-to-the-golden-ratio/
+(use-package golden-ratio
+  :ensure t
+  ; :diminish golden-ratio-mode
+  :init
+  (golden-ratio-mode 1))
+
+(use-package windmove
+  :ensure t
+  :config (windmove-default-keybindings 'super)
+  (setq windmove-wrap-around t))
+
