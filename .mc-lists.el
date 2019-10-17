@@ -3,9 +3,12 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        c-electric-delete-forward
         c-electric-lt-gt
+        c-electric-paren
+        c-electric-semi&comma
         coffee-dedent-line-backspace
-        upcase-region
+        crux-move-beginning-of-line
         downcase-region
         enh-ruby-electric-brace
         go-mode-insert-and-indent
@@ -14,7 +17,11 @@
         org-delete-char
         ruby-electric-curlies
         ruby-electric-space
+        sh-assignment
+        swiper
         upcase-region
+        upcase-region
+        wdired-finish-edit
         ))
 
 (setq mc/cmds-to-run-once
@@ -22,10 +29,15 @@
         beginning-of-buffer
         counsel-find-file
         end-of-buffer
+        eval-print-last-sexp
+        go-goto-imports
+        graphviz-dot-preview
         ido-switch-buffer
+        ivy-switch-buffer
         kill-region
         magit-status
         markdown-exdent-or-delete
         org-self-insert-command
         ruby-electric-matching-char
+        shell-command-on-region
         ))

@@ -1,15 +1,30 @@
+;; Speed up init time
+;; https://twitter.com/dotemacs/status/901026651122917376
+(setq gc-cons-threshold 100000000)
+
+;; Stop making shit
+(defun inkel/markdown-hook ()
+  (interactive)
+  (toggle-truncate-lines nil)
+  (flyspell-mode t)
+  (toggle-word-wrap t))
+(add-hook 'markdown-mode #'inkel/markdown-hook)
+
 ;; Disable startup screen
 (setq startup-screen-inhibit-startup-screen t
       inhibit-startup-screen t)
 
 ;; Default font
-(condition-case nil
-    (set-face-attribute 'default nil :family "Monaco" :height 140))
+;; (condition-case nil
+;;     (set-face-attribute 'default nil :family "Monaco" :height 140))
 
-(cond ((eq system-type 'darwin)
-       (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
-      ((eq system-type 'gnu/linux)
-       (set-face-attribute 'default nil :family "Droid Sans Mono" :height 100)))
+;; (cond ((eq system-type 'darwin)
+;;        (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+;;       ((eq system-type 'gnu/linux)
+;;        (set-face-attribute 'default nil :family "Droid Sans Mono" :height 100)))
+
+; https://blog.golang.org/go-fonts
+(set-face-attribute 'default nil :family "Go Mono" :height 140)
 
 ;; Packages
 (require 'package)
@@ -73,6 +88,7 @@
       (flyspell-mode t)
       (turn-on-auto-fill))
     (add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
+    (setq vc-handled-backends (delq 'Git vc-handled-backends))
     (defadvice magit-status (around magit-fullscreen activate)
       (window-configuration-to-register :magit-fullscreen)
       ad-do-it
@@ -89,25 +105,26 @@
   (progn
     (unless (member "/usr/local/go/bin" (split-string (getenv "PATH") ":"))
       (setenv "PATH" (concat "/usr/local/go/bin:" (getenv "PATH"))))
-    (setenv "GOPATH" "/home/inkel/dev/go")
-    (setq gofmt-command "/home/inkel/dev/go/bin/goimports")
+    (setenv "GOPATH" (concat (getenv "HOME") "/go"))
+    (setq gofmt-command (concat (getenv "GOPATH") "/bin/goimports"))
+    ;; (setq gofmt-command "/usr/local/go/bin/gofmt")
     (add-hook 'before-save-hook 'gofmt-before-save)))
 
 (use-package go-guru
   :ensure t
   :config (progn
-            (setenv "GOPATH" "/home/inkel/dev/go")
-            (setq go-guru-command "/home/inkel/dev/go/bin/guru")
+            (setenv "GOPATH" (concat (getenv "HOME") "/go"))
+            (setq go-guru-command (concat (getenv "GOPATH") "/bin/guru"))
             (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)))
 
 (use-package golint
-  :load-path "/home/inkel/dev/go/src/github.com/golang/lint/misc/emacs")
+  :load-path ("/Users/inkel/go/src/github.com/golang/lint/misc/emacs"))
 
 (use-package company-go
   :ensure t
   :config
   (progn
-    (setq company-go-gocode-command "/home/inkel/dev/go/bin/gocode")
+    (setq company-go-gocode-command (concat (getenv "GOPATH") "/bin/gocode"))
     (defun inkel/company-go-hook ()
       (set (make-local-variable 'company-backends) '(company-go))
       (company-mode t))
@@ -118,8 +135,10 @@
   :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
+         ("C-S->" . mc/unmark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-<" . mc/mark-all-like-this)))
+         ("C-c C->" . mc/mark-all-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 ;;;; Use unique buffer names
 (use-package uniquify
@@ -136,22 +155,22 @@
   (show-paren-mode t))
 
 ;;; M-x on steroids
-(use-package swiper
-  :ensure t
-  :bind (("C-s" . swiper)
-         ("C-r" . swiper))
-  :config (setq search-default-mode nil))
-(use-package counsel
-  :ensure t
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)))
-(use-package ivy
-  :ensure t
-  :config (progn
-            (setq ivy-use-virtual-buffers t
-                  ivy-height 10
-                  ivy-count-format "(%d/%d) ")
-            (ivy-mode 1)))
+;; (use-package swiper
+;;   :ensure t
+;;   :bind (("C-s" . swiper)
+;;          ("C-r" . swiper))
+;;   :config (setq search-default-mode nil))
+;; (use-package counsel
+;;   :ensure t
+;;   :bind (("M-x" . counsel-M-x)
+;;          ("C-x C-f" . counsel-find-file)))
+;; (use-package ivy
+;;   :ensure t
+;;   :config (progn
+;;             (setq ivy-use-virtual-buffers t
+;;                   ivy-height 10
+;;                   ivy-count-format "(%d/%d) ")
+;;             (ivy-mode 1)))
 
 ;; Load custom settings if present
 (setq custom-file "~/.emacs.d/custom.el")
@@ -274,17 +293,17 @@
 
 ;; org-mode
 (use-package org
-  :config
-  (progn
-    (setq org-todo-keyword-faces
-      '(("TODO" . (:foreground "grey"))
-        ("DONE" . (:foreground "#00aa00"))
-        ("WIP" . (:foreground "yellow"))
-        ("BLOCKED" . (:foreground "red" :weight "bold"))
-        ("CANCELED" . (:foreground "red" :strike-through t))))
-    (setq-default org-display-custom-times t)
-    (setq org-time-stamp-custom-formats
-          '("<%Y-%m-%d>" . "<%Y/%m/%d %a %H:%M>"))))
+  :ensure t
+  :init (setq org-directory "~/org"
+              org-todo-keywords '((sequence "TODO(t)" "DOING(g)" "|" "DONE(d)")
+                                  (sequence "|" "CANCELED(c)"))
+              org-default-notes-file (concat org-directory "/notes.org")
+              org-capture-templates '(
+                                      ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org")) "* %?\n%i\n")
+                                      ("J" "Journal (pick date)" entry (file+datetree+prompt (concat org-directory "/journal.org")) "* %?\n%i\n")
+                                      ))
+  :bind (("C-c l" . org-store-link)
+         ("C-c c" . org-capture)))
 
 (use-package yaml-mode
   :ensure t
@@ -307,7 +326,7 @@
 (global-set-key (kbd "<f9>") inkel-map)
 
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "/usr/bin/google-chrome")
+      browse-url-generic-program "open")
 
 ;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
 ;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
@@ -315,15 +334,93 @@
   :ensure t
   :bind (("C-c o" . crux-open-with)
          ("C-a" . crux-move-beginning-of-line)))
+
+(put 'upcase-region 'disabled nil)
+
 ;; http://pragmaticemacs.com/emacs/resize-your-windows-to-the-golden-ratio/
 (use-package golden-ratio
   :ensure t
-  ; :diminish golden-ratio-mode
-  :init
-  (golden-ratio-mode 1))
+  :init (golden-ratio-mode -1))
 
 (use-package windmove
   :ensure t
   :config (windmove-default-keybindings 'super)
   (setq windmove-wrap-around t))
 
+(defun inkel/find-file (file)
+  (let ((buf (find-buffer-visiting file)))
+    (cond (buf (switch-to-buffer buf))
+          (t (find-file file)))))
+
+(defun inkel/open-emacs-conf ()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+(defun inkel/open-ssh-conf ()
+  (interactive)
+  (inkel/find-file "~/.ssh/config"))
+
+;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
+;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
+(defun inkel/org-agenda-show-agenda-and-todo (&optional arg)
+  (interactive "P")
+  (org-agenda arg "n"))
+;; <f9>-a
+(define-key inkel-map (kbd "a") 'inkel/org-agenda-show-agenda-and-todo)
+;; http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/
+
+;; No C-<n>/M-<n> crap
+(dotimes (n 10)
+  (global-unset-key (kbd (format "C-%d" n)))
+  (global-unset-key (kbd (format "M-%d" n))))
+
+;; http://pragmaticemacs.com/emacs/adaptive-cursor-width/
+;; make cursor the width of the character it is under
+;; i.e. full width of a TAB
+(setq x-stretch-cursor t)
+
+;; Visible bell
+(setq visible-bell t)
+
+(toggle-word-wrap t)
+
+;; just in case
+;; https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746
+(setq auto-window-vscroll nil)
+
+(use-package xml-mode
+  :mode (("\\.csproj$" . xml-mode)
+         ("\\.PublishSettings$" . xml-mode)))
+
+(use-package omnisharp
+  :config (add-hook 'csharp-mode-hook 'omnisharp-mode))
+
+(defun inkel/clojure-mode-hook ()
+  (interactive)
+  (cider-mode)
+  (clj-refactor-mode 1)
+  (paredit-mode)
+  (rainbow-delimiters-mode))
+
+(use-package queue :ensure t) ;; required for some crap below
+
+(use-package clojure-mode
+  :ensure t
+  :config (add-hook 'clojure-mode-hook 'inkel/clojure-mode-hook))
+
+(use-package clj-refactor
+  :ensure t
+  :config (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+(use-package cider
+  :ensure t)
+
+(setq pop-up-windows nil)
+
+(use-package paredit
+  :ensure t)
+
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
+
+(use-package rainbow-delimiters :ensure t)
