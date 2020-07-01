@@ -93,12 +93,25 @@
     ;; Do not display print dialog
     (global-set-key (kbd "s-p") nil))
 
+  ;;; Do not send to background/minimize
+  (global-set-key (kbd "C-z") nil)
+  (global-set-key (kbd "C-x C-z") nil)
+
   ;;; Glorious package to let you know what binding are available
   (use-package which-key
     :defer nil
     :diminish which-key-mode
     :config
     (which-key-mode))
+
+  ;;; I love this package, even when I only use one function
+  (use-package multiple-cursors
+    :bind (("C-S-c C-S-c" . mc/edit-lines)
+           ("C->" . mc/mark-next-like-this)
+           ("C-S->" . mc/unmark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-c C->" . mc/mark-all-like-this)
+           ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
   ;; Visual settings
   ;;; Remove sual clutter
