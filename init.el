@@ -72,6 +72,28 @@
   ;;; Sound off
   (setq ring-bell-function 'ignore)
 
+  ;; Key bindings
+  (require 'bind-key)
+
+  ;;; macOS bindings
+  (when (string= "darwin" system-type)
+    ;; Move through windows using meta-<arrows>
+    (global-set-key (kbd "s-<right>") 'windmove-right)
+    (global-set-key (kbd "s-<left>")  'windmove-left)
+    (global-set-key (kbd "s-<up>")    'windmove-up)
+    (global-set-key (kbd "s-<down>")  'windmove-down)
+    ;; Do not close Emacs on Command-q
+    (global-set-key (kbd "s-q") nil)
+    ;; Do not display print dialog
+    (global-set-key (kbd "s-p") nil))
+
+  ;;; Glorious package to let you know what binding are available
+  (use-package which-key
+    :defer nil
+    :diminish which-key-mode
+    :config
+    (which-key-mode))
+
   ;; Set GC threshold to 1GB
   (setq gc-cons-threshold (* 1000 1000))
   ) ;; End prevent of special filename parsing
