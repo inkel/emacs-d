@@ -77,6 +77,11 @@
   (require 'bind-key)
 
   ;;; macOS bindings
+  (use-package windmove ;; For moving across windows
+    :ensure t
+    :config (windmove-default-keybindings 'super)
+    (setq windmove-wrap-around t))
+
   (when (string= "darwin" system-type)
     ;; Move through windows using meta-<arrows>
     (global-set-key (kbd "s-<right>") 'windmove-right)
@@ -128,6 +133,15 @@
   ;;; make cursor the width of the character it is under
   ;;; i.e. full width of a TAB
   (setq x-stretch-cursor t)
+
+  ;;; Make it easy to identify each open file
+  (use-package uniquify
+    :defer 1
+    :ensure nil
+    :custom
+    (uniquify-after-kill-buffer-p t)
+    (uniquify-buffer-name-style 'post-forward)
+    (uniquify-strip-common-suffix t))
 
   ;; Set GC threshold to 1GB
   (setq gc-cons-threshold (* 1000 1000))
