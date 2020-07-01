@@ -8,7 +8,9 @@
         c-electric-paren
         c-electric-semi&comma
         coffee-dedent-line-backspace
+        comment-dwim
         crux-move-beginning-of-line
+        dired-toggle-read-only
         downcase-region
         enh-ruby-electric-brace
         go-mode-insert-and-indent
@@ -26,6 +28,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        backward-sentence
         beginning-of-buffer
         counsel-find-file
         end-of-buffer
@@ -37,6 +40,7 @@
         kill-region
         magit-status
         markdown-exdent-or-delete
+        mouse-set-region
         org-self-insert-command
         ruby-electric-matching-char
         shell-command-on-region

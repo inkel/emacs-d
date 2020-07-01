@@ -97,10 +97,12 @@
 ;;;; Go
 (use-package go-mode
   :ensure t
-  :bind (("C-c C-r" . go-remove-unused-imports)
-	 ("C-c C-g" . go-goto-imports)
-	 ("C-c C-f" . gofmt)
-	 ("C-c C-k" . godoc))
+  :bind (
+         :map go-mode-map
+         ("C-c C-r" . go-remove-unused-imports)
+         ("C-c C-g" . go-goto-imports)
+         ("C-c C-f" . gofmt)
+         ("C-c C-k" . godoc))
   :config
   (progn
     (unless (member "/usr/local/go/bin" (split-string (getenv "PATH") ":"))
@@ -303,7 +305,9 @@
                                       ("J" "Journal (pick date)" entry (file+datetree+prompt (concat org-directory "/journal.org")) "* %?\n%i\n")
                                       ))
   :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture)))
+         ("C-c c" . org-capture))
+  :config (toggle-truncate-lines t)
+  (toggle-word-wrap t))
 
 (use-package yaml-mode
   :ensure t
@@ -358,6 +362,9 @@
 (defun inkel/open-ssh-conf ()
   (interactive)
   (inkel/find-file "~/.ssh/config"))
+(defun inkel/open-theorem-weekly ()
+  (interactive)
+  (find-file "~/dev/citrusbyte/wiki/Theorem-Weekly.md"))
 
 ;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
 ;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
@@ -382,6 +389,7 @@
 (setq visible-bell t)
 
 (toggle-word-wrap t)
+(toggle-truncate-lines t)
 
 ;; just in case
 ;; https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746
@@ -392,35 +400,49 @@
          ("\\.PublishSettings$" . xml-mode)))
 
 (use-package omnisharp
+  :ensure t
   :config (add-hook 'csharp-mode-hook 'omnisharp-mode))
-
-(defun inkel/clojure-mode-hook ()
-  (interactive)
-  (cider-mode)
-  (clj-refactor-mode 1)
-  (paredit-mode)
-  (rainbow-delimiters-mode))
 
 (use-package queue :ensure t) ;; required for some crap below
 
 (use-package clojure-mode
-  :ensure t
-  :config (add-hook 'clojure-mode-hook 'inkel/clojure-mode-hook))
+  :ensure t)
 
 (use-package clj-refactor
   :ensure t
+  :hook (clojure-mode . clj-refactor-mode)
   :config (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (use-package cider
-  :ensure t)
+  :ensure t
+  :hook (clojure-mode . cider-mode)
+  :config
+  (setq cider-show-error-buffer 'only-in-repl)
+  (cider-auto-test-mode 1))
 
-(setq pop-up-windows nil)
+;(setq pop-up-windows nil)
 
 (use-package paredit
-  :ensure t)
+  :ensure t
+  :hook ((clojure-mode . paredit-mode)
+         (emacs-lisp-mode . paredit-mode)))
 
 (use-package which-key
   :ensure t
   :config (which-key-mode))
 
-(use-package rainbow-delimiters :ensure t)
+(use-package rainbow-delimiters
+  :ensure t
+  :hook ((clojure-mode . rainbow-delimiters-mode)
+         (emacs-lisp-mode . rainbow-delimiters-mode)))
+
+;;; http://xenodium.com/showhide-emacs-dired-details-in-style
+(use-package dired
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (use-package diredfl
+    :ensure t
+    :config (diredfl-global-mode 1)))
+
+(global-linum-mode t)
+(put 'narrow-to-region 'disabled nil)
