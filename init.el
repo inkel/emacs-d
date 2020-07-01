@@ -73,6 +73,36 @@
   (setq ring-bell-function 'ignore)
   (setq visible-bell t)
 
+  ;;; Delete highlighted region
+  (delete-selection-mode t)
+
+  ;;; Use y/n instead of yes/no for questions
+  (defalias 'yes-or-no-p 'y-or-n-)
+
+  ;;; Use system clipboard for copy/paste
+  (setq x-select-enable-clipboard t)
+
+  ;;; Reload files when changed
+  (global-auto-revert-mode 1)
+
+  ;;; Disable backups
+  (setq backup-inhibited t)
+
+  ;;; Tab either indents or complete
+  (setq tab-always-indent 'complete)
+
+  ;;; Use UTF-8 by default
+  (prefer-coding-system        'utf-8)
+  (set-language-environment    'utf-8)
+  (set-default-coding-systems  'utf-8)
+  (set-terminal-coding-system  'utf-8)
+  (set-selection-coding-system 'utf-8)
+
+  ;;; Indentation
+  (setq standard-indent 2)
+  (setq-default tab-width 2)
+  (setq-default indent-tabs-mode nil)
+
   ;; Key bindings
   (require 'bind-key)
 
