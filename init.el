@@ -186,6 +186,22 @@
     (uniquify-buffer-name-style 'post-forward)
     (uniquify-strip-common-suffix t))
 
+  ;; Magit - Enough reason to use Emacs
+  (use-package magit
+    :bind (("C-x g" . magit-status))
+    :config
+    (progn
+      (defun inkel/magit-log-edit-mode-hook ()
+        (setq fill-column 72)
+        (flyspell-mode t)
+        (turn-on-auto-fill))
+      (add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
+      (setq vc-handled-backends (delq 'Git vc-handled-backends))
+      (defadvice magit-status (around magit-fullscreen activate)
+        (window-configuration-to-register :magit-fullscreen)
+        ad-do-it
+        (delete-other-windows))))
+
   ;; Set GC threshold to 1GB
   (setq gc-cons-threshold (* 1000 1000))
   ) ;; End prevent of special filename parsing
