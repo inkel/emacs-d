@@ -71,6 +71,7 @@
 
   ;;; Sound off
   (setq ring-bell-function 'ignore)
+  (setq visible-bell t)
 
   ;; Key bindings
   (require 'bind-key)
@@ -93,6 +94,40 @@
     :diminish which-key-mode
     :config
     (which-key-mode))
+
+  ;; Visual settings
+  ;;; Remove sual clutter
+  (when (display-graphic-p)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+    (global-hl-line-mode -1))
+
+  ;;; Use a theme
+  (load-theme 'wheatgrass)
+
+  ;;; Default font to Go Mono, if available
+  ;;; https://blog.golang.org/go-fonts
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Go Mono" :height 140))
+
+  ;;; Disable startup screen
+  (setq startup-screen-inhibit-startup-screen t
+        inhibit-startup-screen t)
+
+  ;;; Misc settings
+  (setq query-replace-highlight t	 ; Highlight matches during query replacement
+      search-highlight t           ; Highlight current search match
+      column-number-mode t         ; Column number on status bar
+      size-indication-mode t       ; Show buffer size
+      blink-cursor-mode t          ; Blink the cursor
+      frame-title-format "%b (%f)" ; Frame title format
+      )
+
+  ;;; http://pragmaticemacs.com/emacs/adaptive-cursor-width/
+  ;;; make cursor the width of the character it is under
+  ;;; i.e. full width of a TAB
+  (setq x-stretch-cursor t)
 
   ;; Set GC threshold to 1GB
   (setq gc-cons-threshold (* 1000 1000))
