@@ -103,6 +103,11 @@
   (setq-default tab-width 2)
   (setq-default indent-tabs-mode nil)
 
+  ;;; Fix $PATH in macOS
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :config (exec-path-from-shell-initialize))
+
   ;; Key bindings
   (require 'bind-key)
 
