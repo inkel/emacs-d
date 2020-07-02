@@ -143,6 +143,15 @@
            ("C-c C->" . mc/mark-all-like-this)
            ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
+  ;;; Use crux for some useful things, like C-a moving to the first
+  ;;; character of the line instead of the beggining of the line!.
+  ;;; https://github.com/bbatsov/crux
+  ;;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
+  ;;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
+  (use-package crux
+    :bind (("C-c o" . crux-open-with)
+           ("C-a" . crux-move-beginning-of-line)))
+
   ;; Visual settings
   ;;; Remove sual clutter
   (when (display-graphic-p)
