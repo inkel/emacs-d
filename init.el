@@ -179,12 +179,12 @@
 
   ;;; Misc settings
   (setq query-replace-highlight t	 ; Highlight matches during query replacement
-      search-highlight t           ; Highlight current search match
-      column-number-mode t         ; Column number on status bar
-      size-indication-mode t       ; Show buffer size
-      blink-cursor-mode t          ; Blink the cursor
-      frame-title-format "%b (%f)" ; Frame title format
-      )
+        search-highlight t           ; Highlight current search match
+        column-number-mode t         ; Column number on status bar
+        size-indication-mode t       ; Show buffer size
+        blink-cursor-mode t          ; Blink the cursor
+        frame-title-format "%b (%f)" ; Frame title format
+        )
 
   ;;; http://pragmaticemacs.com/emacs/adaptive-cursor-width/
   ;;; make cursor the width of the character it is under
