@@ -77,7 +77,7 @@
   (delete-selection-mode t)
 
   ;;; Use y/n instead of yes/no for questions
-  (defalias 'yes-or-no-p 'y-or-n-)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
   ;;; Use system clipboard for copy/paste
   (setq x-select-enable-clipboard t)
