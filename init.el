@@ -171,7 +171,7 @@
   ;;; Default font to Go Mono, if available
   ;;; https://blog.golang.org/go-fonts
   (condition-case nil
-      (set-face-attribute 'default nil :family "Go Mono" :height 140))
+      (set-face-attribute 'default nil :family "Go Mono" :height 160))
 
   ;;; Disable startup screen
   (setq startup-screen-inhibit-startup-screen t
