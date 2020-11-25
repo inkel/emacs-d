@@ -200,6 +200,12 @@
     (uniquify-buffer-name-style 'post-forward)
     (uniquify-strip-common-suffix t))
 
+  ;;; ibuffer
+  (use-package ibuffer
+    :bind (("C-x C-b" . ibuffer))
+    :config
+    (setq ibuffer-default-sorting-mode 'filename/process))
+
   ;; Magit - Enough reason to use Emacs
   (use-package magit
     :bind (("C-x g" . magit-status))
