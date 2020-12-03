@@ -231,6 +231,20 @@
       ad-do-it
       (delete-other-windows)))
 
+  ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
+  (use-package dired
+    :ensure nil
+    :hook (dired-mode . dired-hide-details-mode)
+    :config
+    ;; Colourful columns.
+    (use-package diredfl
+      :config
+      (diredfl-global-mode 1))
+    (use-package dired-git-info
+      :ensure t
+      :bind (:map dired-mode-map
+                  (")" . dired-git-info-mode))))
+
   ;; Just a message for me, and a placeholder to add stuff at the end
   ;; without having to change too many lines.
   (message "Ready to rock"))
