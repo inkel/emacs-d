@@ -228,7 +228,7 @@
       (window-configuration-to-register :magit-fullscreen)
       ad-do-it
       (delete-other-windows))))
+;; End prevent of special filename parsing
 
-  ;; Set GC threshold to 1GB
-  (setq gc-cons-threshold (* 1000 1000))
-  ) ;; End prevent of special filename parsing
+;; Set GC threshold to 1GB
+(setq gc-cons-threshold (* 1000 1000))
