@@ -227,7 +227,11 @@
     (defadvice magit-status (around magit-fullscreen activate)
       (window-configuration-to-register :magit-fullscreen)
       ad-do-it
-      (delete-other-windows))))
+      (delete-other-windows)))
+
+  ;; Just a message for me, and a placeholder to add stuff at the end
+  ;; without having to change too many lines.
+  (message "Ready to rock"))
 ;; End prevent of special filename parsing
 
 ;; Set GC threshold to 1GB
