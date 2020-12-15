@@ -80,7 +80,7 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
 
   ;;; Use system clipboard for copy/paste
-  (setq x-select-enable-clipboard t)
+  (setq select-enable-clipboard t)
 
   ;;; Reload files when changed
   (global-auto-revert-mode 1)
