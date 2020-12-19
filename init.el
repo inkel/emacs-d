@@ -231,6 +231,10 @@
       ad-do-it
       (delete-other-windows)))
 
+  ;; ibuffer
+  (use-package ibuffer
+    :bind ("C-x C-b" . ibuffer))
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
