@@ -235,6 +235,10 @@
   (use-package ibuffer
     :bind ("C-x C-b" . ibuffer))
 
+  ;; Incremental narrowing
+  (use-package selectrum
+    :config (selectrum-mode +1))
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
