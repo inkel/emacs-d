@@ -113,18 +113,7 @@
   ;; Key bindings
   (require 'bind-key)
 
-  ;;; macOS bindings
-  (use-package windmove ;; For moving across windows
-    :ensure t
-    :config (windmove-default-keybindings 'super)
-    (setq windmove-wrap-around t))
-
   (when (string= "darwin" system-type)
-    ;; Move through windows using meta-<arrows>
-    (global-set-key (kbd "s-<right>") 'windmove-right)
-    (global-set-key (kbd "s-<left>")  'windmove-left)
-    (global-set-key (kbd "s-<up>")    'windmove-up)
-    (global-set-key (kbd "s-<down>")  'windmove-down)
     ;; Do not close Emacs on Command-q
     (global-set-key (kbd "s-q") nil)
     ;; Do not display print dialog
@@ -243,6 +232,10 @@
   ;; http://www.dr-qubit.org/undo-tree.html
   (use-package undo-tree
     :config (global-undo-tree-mode))
+
+  ;; ace-window - navigate windows easily
+  (use-package ace-window
+    :bind ("M-o" . ace-window))
 
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
