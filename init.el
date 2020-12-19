@@ -239,6 +239,11 @@
   (use-package selectrum
     :config (selectrum-mode +1))
 
+  ;; undo-tree
+  ;; http://www.dr-qubit.org/undo-tree.html
+  (use-package undo-tree
+    :config (global-undo-tree-mode))
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
