@@ -4,9 +4,6 @@
 ;; Use a hook so the message doesn't get clobbered by other messages.
 (add-hook 'emacs-startup-hook
           (lambda ()
-            ;; Start Emacs in full screen mode
-            (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
-
             (message "Emacs ready in %s with %d garbage collections."
                      (format "%.2f seconds"
                              (float-time
@@ -15,6 +12,8 @@
 
 ;; Prevent special filename parsing
 (let ((file-name-handler-alist nil))
+  ;; Start Emacs in full screen mode
+  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
   ;; Custom variables
   (setq custom-file "~/.emacs.d/custom.el")
