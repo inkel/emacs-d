@@ -236,6 +236,17 @@
   (use-package ace-window
     :bind ("M-o" . ace-window))
 
+  ;; Reload Emacs config
+  (defun inkel/reload-emacs-configuration ()
+    (interactive)
+    (let ((before-time (current-time))
+          (gcs gcs-done))
+      (load-file "~/.emacs.d/init.el")
+      (message "Emacs ready in %.2f seconds with %d garbage collections."
+               (float-time (time-subtract (current-time) before-time))
+               (- gcs-done gcs))))
+  (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
