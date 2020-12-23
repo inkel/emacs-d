@@ -15,10 +15,15 @@
   ;; Start Emacs in full screen mode
   (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
-  ;; Custom variables
+  ;; Custom variables && configuration
   (setq custom-file "~/.emacs.d/custom.el")
   (if (file-exists-p custom-file)
       (load custom-file))
+
+  (let* ((computer-name (string-trim-right (system-name) ".local"))
+         (computer-custom-file (concat user-emacs-directory computer-name ".el")))
+    (when (file-exists-p computer-custom-file)
+      (load computer-custom-file)))
 
   ;; Package management
   (customize-set-variable 'package-archives
