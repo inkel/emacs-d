@@ -252,6 +252,15 @@
                (- gcs-done gcs))))
   (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
 
+  ;; Markdown - https://jblevins.org/projects/markdown-mode/
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
