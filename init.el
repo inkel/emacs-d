@@ -106,7 +106,7 @@
 
   ;;; Indentation
   (setq standard-indent 2)
-  (setq-default tab-width 2)
+  (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
 
   ;;; Fix $PATH in macOS
@@ -167,6 +167,14 @@
   ;;; https://blog.golang.org/go-fonts
   (condition-case nil
       (set-face-attribute 'default nil :family "Go Mono" :height 160))
+
+  ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
+
+  ;;; https://coding-fonts.css-tricks.com/fonts/hack/
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Hack" :height 140))
 
   ;;; Disable startup screen
   (setq startup-screen-inhibit-startup-screen t
@@ -252,6 +260,37 @@
                (- gcs-done gcs))))
   (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
 
+  ;; Grafana
+  ;;; Jsonnet
+  (use-package jsonnet-mode)
+
+  ;;(use-package terraform-mode)
+
+  (use-package yaml-mode)
+
+  (use-package dockerfile-mode)
+
+  ;; General programming
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :init (setq lsp-keymap-prefix "s-l")
+    :hook ((before-save . lsp-format-buffer)
+           (before-save . lsp-organize-imports)
+           (go-mode . lsp-deferred))
+    :bind (("C-c e d" . lsp-find-implementation)
+           ("C-c e t" . lsp-find-type-definition)
+           ("C-c e r" . lsp-find-references)
+           ("C-c e R" . lsp-rename)))
+
+  ;; Go programming
+  (setenv "GOPATH" "/Users/inkel/dev/go")
+  (setq lsp-gopls-staticcheck t)
+  (setq lsp-eldoc-render-all t)
+  (setq lsp-gopls-complete-unimported t)
+
+  (use-package go-mode
+    :hook (go-mode . lsp))
+
   ;; Markdown - https://jblevins.org/projects/markdown-mode/
   (use-package markdown-mode
     :ensure t
@@ -260,6 +299,12 @@
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
     :init (setq markdown-command "multimarkdown"))
+
+  ;; Org
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+  (global-set-key "\C-cl" 'org-store-link)
 
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
@@ -274,6 +319,18 @@
       :ensure t
       :bind (:map dired-mode-map
                   (")" . dired-git-info-mode))))
+
+  ;; Lisp & Clojure
+  (use-package cider
+    :hook clojure-mode-hook
+    :config
+    ;; (setenv "JAVA_HOME" "/usr/local/opt/openjdk/libexec/openjdk.jdk/Contents/Home")
+    (exec-path-from-shell-copy-env "JAVA_HOME")
+    (setq cider-repl-pop-to-buffer-on-connect 'display-only)
+    (setq cider-repl-display-in-current-window nil))
+
+  ;; Server
+  (server-start)
 
   ;; Just a message for me, and a placeholder to add stuff at the end
   ;; without having to change too many lines.
