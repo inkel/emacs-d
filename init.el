@@ -58,10 +58,6 @@
     :ensure nil
     :config (global-display-line-numbers-mode))
 
-  ;;; Trailing whitespace is bad and you should feel bad
-  (customize-set-variable 'show-trailing-whitespace t)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
   ;;; Matching parenthesis
   (show-paren-mode)
 
@@ -331,6 +327,10 @@
 
   ;; Server
   (server-start)
+
+   ;;; Trailing whitespace is bad and you should feel bad
+  (customize-set-variable 'show-trailing-whitespace t)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
   ;; Just a message for me, and a placeholder to add stuff at the end
   ;; without having to change too many lines.
