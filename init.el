@@ -310,6 +310,10 @@
   (global-set-key "\C-cb" 'org-switchb)
   (global-set-key "\C-cl" 'org-store-link)
 
+  (use-package ox-gfm
+    :ensure t
+    :after org)
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
