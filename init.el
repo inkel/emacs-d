@@ -48,6 +48,12 @@
   (customize-set-variable 'load-prefer-newer t)
 
   ;; Misc settings
+  ;;; Completion - https://company-mode.github.io/
+  (use-package company
+    :hook (after-init . global-company-mode))
+  ;;; Yasnippet - http://joaotavora.github.io/yasnippet/
+  (use-package yasnippet
+    :config (yas-global-mode))
 
   ;;; Paste where cursor is
   (customize-set-variable 'mouse-yank-at-point t)
