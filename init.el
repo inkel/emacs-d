@@ -15,6 +15,8 @@
   ;; Start Emacs in full screen mode
   (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
+  (setq default-directory "~/")
+
   ;; Custom variables && configuration
   (setq custom-file "~/.emacs.d/custom.el")
   (if (file-exists-p custom-file)
