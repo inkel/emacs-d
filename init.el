@@ -1,88 +1,235 @@
-;; Speed up init time
-;; https://twitter.com/dotemacs/status/901026651122917376
-(setq gc-cons-threshold 100000000)
+;; Raise GC threshold to maximum available
+(setq gc-cons-threshold most-positive-fixnum)
 
-;; Stop making shit
-(defun inkel/markdown-hook ()
-  (interactive)
-  (toggle-truncate-lines nil)
-  (flyspell-mode t)
-  (toggle-word-wrap t))
-(add-hook 'markdown-mode #'inkel/markdown-hook)
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
-;; Disable startup screen
-(setq startup-screen-inhibit-startup-screen t
-      inhibit-startup-screen t)
+;; Prevent special filename parsing
+(let ((file-name-handler-alist nil))
+  ;; Start Emacs in full screen mode
+  (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
-;; Default font
-;; (condition-case nil
-;;     (set-face-attribute 'default nil :family "Monaco" :height 140))
+  (setq default-directory "~/")
 
-;; (cond ((eq system-type 'darwin)
-;;        (set-default-font "-*-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
-;;       ((eq system-type 'gnu/linux)
-;;        (set-face-attribute 'default nil :family "Droid Sans Mono" :height 100)))
+  ;; Custom variables && configuration
+  (setq custom-file "~/.emacs.d/custom.el")
+  (if (file-exists-p custom-file)
+      (load custom-file))
 
-; https://blog.golang.org/go-fonts
-(set-face-attribute 'default nil :family "Go Mono" :height 140)
+  (let* ((computer-name (string-trim-right (system-name) ".local"))
+         (computer-custom-file (concat user-emacs-directory computer-name ".el")))
+    (when (file-exists-p computer-custom-file)
+      (load computer-custom-file)))
 
-;; Packages
-(require 'package)
+  ;; Package management
+  (customize-set-variable 'package-archives
+                          '(("gnu"       . "https://elpa.gnu.org/packages/")
+                            ("melpa"     . "https://melpa.org/packages/")))
 
-;;; Do not activate installed packages when Emacs starts.
-(setq package-enable-at-startup nil)
+  (package-initialize)
 
-;;; Additional sources for packages
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/"))
+  (when (not package-archive-contents)
+    (package-refresh-contents))
 
-;;; Load and activate packages
-(package-initialize)
+  (when (not (package-installed-p 'use-package))
+    (package-install 'use-package))
 
-;;; This article changed my life
-;;; http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html
+  (require 'use-package)
 
-;;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (customize-set-variable 'use-package-always-ensure t)
+  (customize-set-variable 'use-package-always-defer t)
+  (customize-set-variable 'use-package-verbose nil)
 
-(require 'use-package)
+  ;; Loading compiled files
+  (customize-set-variable 'load-prefer-newer t)
 
-;;;; Fix $PATH in OSX Emacs
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(mac ns))
-  :config (exec-path-from-shell-initialize))
+  ;; Misc settings
+  ;;; Completion - https://company-mode.github.io/
+  (use-package company
+    :hook (after-init . global-company-mode))
+  ;;; Yasnippet - http://joaotavora.github.io/yasnippet/
+  (use-package yasnippet
+    :config (yas-global-mode))
 
-;;;; Company. Auto-completion.
-(use-package company
-  :ensure t
-  :bind (("C-<tab>" . company-complete))
-  :config
-  (global-company-mode))
+  ;;; Paste where cursor is
+  (customize-set-variable 'mouse-yank-at-point t)
 
-;;; GnuPG - automatic passphrase
-(defun load-gpg-agent-info ()
-  (interactive)
-  (let* ((agent-info-file (or (getenv "GPG_AGENT_INFO_FILE")
-                              (concat (getenv "HOME") "/.gpg-agent-info")))
-         (contents (with-temp-buffer
-                     (insert-file-contents agent-info-file)
-                     (buffer-string)))
-         (agent-info (substring (cadr (split-string contents "=")) 0 -1))
+  ;;; Show line numbers
+  (use-package display-line-numbers
+    :defer nil
+    :ensure nil
+    :config (global-display-line-numbers-mode))
 
-         )
-    (message (format "Setting GPG_AGENT_INFO=%s" agent-info))
-    (setenv "GPG_AGENT_INFO" agent-info)))
+  ;;; Matching parenthesis
+  (show-paren-mode)
 
-;;;; magit
-(use-package magit
-  :ensure t
-  :defer t
-  :bind (("C-x g" . magit-status))
-  :config
-  (progn
+  ;;; Fuck tabs!
+  (customize-set-variable 'indent-tabs-mode nil)
+
+  ;;; Those pesky backups files…
+  (customize-set-variable 'backup-directory-alist
+                          `(("." . ,(concat user-emacs-directory "backups"))))
+
+  ;; Adds a new line at the last line
+  (setq require-final-newline t)
+
+  ;; Analyze script hash-bang and mark it as executable if possible on
+  ;; first saven
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
+
+  ;;; Sound off
+  (setq ring-bell-function 'ignore)
+  (setq visible-bell t)
+
+  ;;; Delete highlighted region
+  (delete-selection-mode t)
+
+  ;;; Use y/n instead of yes/no for questions
+  (defalias 'yes-or-no-p 'y-or-n-p)
+
+  ;;; Use system clipboard for copy/paste
+  (setq select-enable-clipboard t)
+
+  ;;; Reload files when changed
+  (global-auto-revert-mode 1)
+
+  ;;; Disable backups
+  (setq backup-inhibited t)
+
+  ;;; Tab either indents or complete
+  (setq tab-always-indent 'complete)
+
+  ;;; Use UTF-8 by default
+  (prefer-coding-system        'utf-8)
+  (set-language-environment    'utf-8)
+  (set-default-coding-systems  'utf-8)
+  (set-terminal-coding-system  'utf-8)
+  (set-selection-coding-system 'utf-8)
+
+  ;;; Indentation
+  (setq standard-indent 2)
+  (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil)
+
+  ;;; Fix $PATH in macOS
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :config (exec-path-from-shell-initialize))
+
+  ;; Key bindings
+  (require 'bind-key)
+
+  (when (string= "darwin" system-type)
+    ;; Do not close Emacs on Command-q
+    (global-set-key (kbd "s-q") nil)
+    ;; Do not display print dialog
+    (global-set-key (kbd "s-p") nil))
+
+  ;;; Do not send to background/minimize
+  (global-set-key (kbd "C-z") nil)
+  (global-set-key (kbd "C-x C-z") nil)
+
+  ;;; Glorious package to let you know what binding are available
+  (use-package which-key
+    :defer nil
+    :diminish which-key-mode
+    :config
+    (which-key-mode))
+
+  ;;; I love this package, even when I only use one function
+  (use-package multiple-cursors
+    :bind (("C-S-c C-S-c" . mc/edit-lines)
+           ("C->" . mc/mark-next-like-this)
+           ("C-S->" . mc/unmark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-c C->" . mc/mark-all-like-this)
+           ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+
+  ;;; Use crux for some useful things, like C-a moving to the first
+  ;;; character of the line instead of the beggining of the line!.
+  ;;; https://github.com/bbatsov/crux
+  ;;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
+  ;;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
+  (use-package crux
+    :bind (("C-c o" . crux-open-with)
+           ("C-a" . crux-move-beginning-of-line)))
+
+  ;; Visual settings
+  ;;; Remove sual clutter
+  (when (display-graphic-p)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+    (global-hl-line-mode -1))
+
+  ;;; Use a theme
+  (load-theme 'wheatgrass)
+
+  ;;; Default font to Go Mono, if available
+  ;;; https://blog.golang.org/go-fonts
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Go Mono" :height 160))
+
+  ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
+
+  ;;; https://coding-fonts.css-tricks.com/fonts/hack/
+  (condition-case nil
+      (set-face-attribute 'default nil :family "Hack" :height 140))
+
+  ;;; Disable startup screen
+  (setq startup-screen-inhibit-startup-screen t
+        inhibit-startup-screen t)
+
+  ;;; Misc settings
+  (setq query-replace-highlight t	 ; Highlight matches during query replacement
+        search-highlight t           ; Highlight current search match
+        column-number-mode t         ; Column number on status bar
+        size-indication-mode t       ; Show buffer size
+        blink-cursor-mode t          ; Blink the cursor
+        frame-title-format "%b (%f)" ; Frame title format
+        )
+
+  ;;; http://pragmaticemacs.com/emacs/adaptive-cursor-width/
+  ;;; make cursor the width of the character it is under
+  ;;; i.e. full width of a TAB
+  (setq x-stretch-cursor t)
+
+  ;;; Make it easy to identify each open file
+  (use-package uniquify
+    :defer 1
+    :ensure nil
+    :custom
+    (uniquify-after-kill-buffer-p t)
+    (uniquify-buffer-name-style 'post-forward)
+    (uniquify-strip-common-suffix t))
+
+  ;;; ibuffer
+  (use-package ibuffer
+    :bind (("C-x C-b" . ibuffer))
+    :config
+    (setq ibuffer-default-sorting-mode 'filename/process))
+
+  ;; Magit - Enough reason to use Emacs
+  (use-package magit
+    :bind (("C-x g" . magit-status))
+    :config
+    ;; Speeding up magit-status
+    ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
+    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+
     (defun inkel/magit-log-edit-mode-hook ()
       (setq fill-column 72)
       (flyspell-mode t)
@@ -92,357 +239,122 @@
     (defadvice magit-status (around magit-fullscreen activate)
       (window-configuration-to-register :magit-fullscreen)
       ad-do-it
-      (delete-other-windows))))
+      (delete-other-windows)))
 
-;;;; Go
-(use-package go-mode
-  :ensure t
-  :bind (
-         :map go-mode-map
-         ("C-c C-r" . go-remove-unused-imports)
-         ("C-c C-g" . go-goto-imports)
-         ("C-c C-f" . gofmt)
-         ("C-c C-k" . godoc))
-  :config
-  (progn
-    (unless (member "/usr/local/go/bin" (split-string (getenv "PATH") ":"))
-      (setenv "PATH" (concat "/usr/local/go/bin:" (getenv "PATH"))))
-    (setenv "GOPATH" (concat (getenv "HOME") "/go"))
-    (setq gofmt-command (concat (getenv "GOPATH") "/bin/goimports"))
-    ;; (setq gofmt-command "/usr/local/go/bin/gofmt")
-    (add-hook 'before-save-hook 'gofmt-before-save)))
+  ;; ibuffer
+  (use-package ibuffer
+    :bind ("C-x C-b" . ibuffer))
 
-(use-package go-guru
-  :ensure t
-  :config (progn
-            (setenv "GOPATH" (concat (getenv "HOME") "/go"))
-            (setq go-guru-command (concat (getenv "GOPATH") "/bin/guru"))
-            (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)))
+  ;; Incremental narrowing
+  (use-package selectrum
+    :config (selectrum-mode +1))
 
-(use-package golint
-  :load-path ("/Users/inkel/go/src/github.com/golang/lint/misc/emacs"))
+  ;; undo-tree
+  ;; http://www.dr-qubit.org/undo-tree.html
+  (use-package undo-tree
+    :config (global-undo-tree-mode))
 
-(use-package company-go
-  :ensure t
-  :config
-  (progn
-    (setq company-go-gocode-command (concat (getenv "GOPATH") "/bin/gocode"))
-    (defun inkel/company-go-hook ()
-      (set (make-local-variable 'company-backends) '(company-go))
-      (company-mode t))
-    (add-hook 'go-mode-hook 'inkel/company-go-hook)))
+  ;; ace-window - navigate windows easily
+  (use-package ace-window
+    :bind ("M-o" . ace-window))
 
-;;;; Can't say how manyn times this saved me. SO useful.
-(use-package multiple-cursors
-  :ensure t
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->" . mc/mark-next-like-this)
-         ("C-S->" . mc/unmark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-         ("C-c C->" . mc/mark-all-like-this)
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+  ;; Reload Emacs config
+  (defun inkel/reload-emacs-configuration ()
+    (interactive)
+    (let ((before-time (current-time))
+          (gcs gcs-done))
+      (load-file "~/.emacs.d/init.el")
+      (message "Emacs ready in %.2f seconds with %d garbage collections."
+               (float-time (time-subtract (current-time) before-time))
+               (- gcs-done gcs))))
+  (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
 
-;;;; Use unique buffer names
-(use-package uniquify
-  :init
-  (setq uniquify-buffer-name-style 'post-forward
-	uniquify-strip-common-suffix nil
-	uniquify-after-kill-buffer-p t))
+  ;; Grafana
+  ;;; Jsonnet
+  (use-package jsonnet-mode)
 
-;;;; Highlight parenthesis/brackets
-(use-package paren
-  :init
-  (setq show-paren-style 'mixed)
-  :config
-  (show-paren-mode t))
+  ;;(use-package terraform-mode)
 
-;;; M-x on steroids
-;; (use-package swiper
-;;   :ensure t
-;;   :bind (("C-s" . swiper)
-;;          ("C-r" . swiper))
-;;   :config (setq search-default-mode nil))
-;; (use-package counsel
-;;   :ensure t
-;;   :bind (("M-x" . counsel-M-x)
-;;          ("C-x C-f" . counsel-find-file)))
-;; (use-package ivy
-;;   :ensure t
-;;   :config (progn
-;;             (setq ivy-use-virtual-buffers t
-;;                   ivy-height 10
-;;                   ivy-count-format "(%d/%d) ")
-;;             (ivy-mode 1)))
+  (use-package yaml-mode)
 
-;; Load custom settings if present
-(setq custom-file "~/.emacs.d/custom.el")
-(if (file-exists-p custom-file)
-    (load custom-file))
+  (use-package dockerfile-mode)
 
-;; Visual settings
-(when (display-graphic-p)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (global-hl-line-mode -1)
-  (load-theme 'whiteboard))
+  ;; General programming
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :init (setq lsp-keymap-prefix "s-l")
+    :hook ((before-save . lsp-format-buffer)
+           (before-save . lsp-organize-imports)
+           (go-mode . lsp-deferred))
+    :bind (("C-c e d" . lsp-find-definition)
+           ("C-c e r" . lsp-find-references)
+           ("C-c e R" . lsp-rename)))
 
-(setq query-replace-highlight t		; Highlight matches during query replacement
-      search-highlight t		; Highlight current search match
-      column-number-mode t		; Column number on status bar
-      size-indication-mode t		; Show buffer size
-      blink-cursor-mode t		; Blink the cursor
-      frame-title-format "%b (%f)"	; Frame title format
-      )
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
-;; Daemon for emacsclient
-(use-package server
-  :config
-  (server-start))
+  ;; Go programming
+  (setenv "GOPATH" "/Users/inkel/dev/go")
+  (setq lsp-gopls-staticcheck t)
+  (setq lsp-eldoc-render-all t)
+  (setq lsp-gopls-complete-unimported t)
 
-;; Ruby Ruby Ruby... ooooohhh ooohh ooooh
-(use-package ruby-mode
-  :mode (("\\.rake$"    . ruby-mode)
-         ("\\.ru$"      . ruby-mode)
-         ("\\.gemspec$" . ruby-mode)
-         ("Gemfile"     . ruby-mode)
-         ("Thorfile"    . ruby-mode)
-         ("Guardfile"   . ruby-mode)
-         ("Rakefile"    . ruby-mode)
-         ("\\.builder$" . ruby-mode)
-         ("\\.god$"     . ruby-mode))
-  :config (progn
-            (add-hook 'ruby-mode-hook 'minitest-mode)))
+  (use-package go-mode
+    :hook (go-mode . lsp))
 
-(use-package minitest
-  :ensure t
-  :config (progn
-            (setq minitest-use-bundler nil)))
-
-;; Docker
-(use-package dockerfile-mode
-  :ensure t
-  :mode "Dockerfile\\'")
-
-;; Edit nginx files
-(use-package nginx-mode :ensure t)
-
-;; OSX bindings
-(when (string= "darwin" system-type)
-  ;; Move through windows using meta-<arrows>
-  (global-set-key (kbd "s-<right>") 'windmove-right)
-  (global-set-key (kbd "s-<left>")  'windmove-left)
-  (global-set-key (kbd "s-<up>")    'windmove-up)
-  (global-set-key (kbd "s-<down>")  'windmove-down)
-  ;; Do not close Emacs on Command-q
-  (global-set-key (kbd "s-q") nil)
-  ;; Do not display print dialog
-  (global-set-key (kbd "s-p") nil))
-
-;; Do not send to background/minimize
-(global-set-key (kbd "C-z") nil)
-(global-set-key (kbd "C-x C-z") nil)
-
-;; ibuffer
-(use-package ibuffer
-  :config (setq ibuffer-expert t)
-  :bind ("C-x C-b" . ibuffer))
-
-;; Analyze script hash-bang and mark it as executable if possible on
-;; first save
-(add-hook 'after-save-hook
-          'executable-make-buffer-file-executable-if-script-p)
-
-;; Delete highlighted region
-(delete-selection-mode t)
-
-;; Use y/n instead of yes/no for questions
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Adds a new line at the last line
-(setq require-final-newline t)
-
-;; Use system clipboard for copy/paste
-(setq x-select-enable-clipboard t)
-
-;; Reload files when changed
-(global-auto-revert-mode 1)
-
-;; Disable backups
-(setq backup-inhibited t)
-
-;; Tab either indents or complete
-(setq tab-always-indent 'complete)
-
-;; Use UTF-8 by default
-(prefer-coding-system        'utf-8)
-(set-language-environment    'utf-8)
-(set-default-coding-systems  'utf-8)
-(set-terminal-coding-system  'utf-8)
-(set-selection-coding-system 'utf-8)
-
-;; Indentation
-(setq standard-indent 2)
-(setq-default tab-width 2)
-(setq-default indent-tabs-mode nil)
-
-;; Trailing whitespace
-(setq show-trailing-whitespace t)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; Left fringe is 4 pixels; right fringe is gone
-(fringe-mode '(4 . 0))
-
-;; org-mode
-(use-package org
-  :ensure t
-  :init (setq org-directory "~/org"
-              org-todo-keywords '((sequence "TODO(t)" "DOING(g)" "|" "DONE(d)")
-                                  (sequence "|" "CANCELED(c)"))
-              org-default-notes-file (concat org-directory "/notes.org")
-              org-capture-templates '(
-                                      ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org")) "* %?\n%i\n")
-                                      ("J" "Journal (pick date)" entry (file+datetree+prompt (concat org-directory "/journal.org")) "* %?\n%i\n")
-                                      ))
-  :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture))
-  :config (toggle-truncate-lines t)
-  (toggle-word-wrap t))
-
-(use-package yaml-mode
-  :ensure t
-  :mode "\\.yml$")
-
-(use-package terraform-mode
-  :ensure t
-  :mode "\\.tf$"
-  :config
-  (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
-
-;; Stolen from http://ergoemacs.org/emacs/emacs_keybinding_power_of_keys_sequence.html
-(progn
-  (define-prefix-command 'inkel-map)
-  (define-key inkel-map (kbd "<f1>") 'linum-mode)
-  (define-key inkel-map (kbd "<f2>") 'whitespace-mode)
-  (define-key inkel-map (kbd "<f3>") 'flyspell-mode)
-  (define-key inkel-map (kbd "<f4>") 'auto-fill-mode)
-  )
-(global-set-key (kbd "<f9>") inkel-map)
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "open")
-
-;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
-;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
-(use-package crux
-  :ensure t
-  :bind (("C-c o" . crux-open-with)
-         ("C-a" . crux-move-beginning-of-line)))
-
-(put 'upcase-region 'disabled nil)
-
-;; http://pragmaticemacs.com/emacs/resize-your-windows-to-the-golden-ratio/
-(use-package golden-ratio
-  :ensure t
-  :init (golden-ratio-mode -1))
-
-(use-package windmove
-  :ensure t
-  :config (windmove-default-keybindings 'super)
-  (setq windmove-wrap-around t))
-
-(defun inkel/find-file (file)
-  (let ((buf (find-buffer-visiting file)))
-    (cond (buf (switch-to-buffer buf))
-          (t (find-file file)))))
-
-(defun inkel/open-emacs-conf ()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-(defun inkel/open-ssh-conf ()
-  (interactive)
-  (inkel/find-file "~/.ssh/config"))
-(defun inkel/open-theorem-weekly ()
-  (interactive)
-  (find-file "~/dev/citrusbyte/wiki/Theorem-Weekly.md"))
-
-;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
-;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
-(defun inkel/org-agenda-show-agenda-and-todo (&optional arg)
-  (interactive "P")
-  (org-agenda arg "n"))
-;; <f9>-a
-(define-key inkel-map (kbd "a") 'inkel/org-agenda-show-agenda-and-todo)
-;; http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/
-
-;; No C-<n>/M-<n> crap
-(dotimes (n 10)
-  (global-unset-key (kbd (format "C-%d" n)))
-  (global-unset-key (kbd (format "M-%d" n))))
-
-;; http://pragmaticemacs.com/emacs/adaptive-cursor-width/
-;; make cursor the width of the character it is under
-;; i.e. full width of a TAB
-(setq x-stretch-cursor t)
-
-;; Visible bell
-(setq visible-bell t)
-
-(toggle-word-wrap t)
-(toggle-truncate-lines t)
-
-;; just in case
-;; https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746
-(setq auto-window-vscroll nil)
-
-(use-package xml-mode
-  :mode (("\\.csproj$" . xml-mode)
-         ("\\.PublishSettings$" . xml-mode)))
-
-(use-package omnisharp
-  :ensure t
-  :config (add-hook 'csharp-mode-hook 'omnisharp-mode))
-
-(use-package queue :ensure t) ;; required for some crap below
-
-(use-package clojure-mode
-  :ensure t)
-
-(use-package clj-refactor
-  :ensure t
-  :hook (clojure-mode . clj-refactor-mode)
-  :config (cljr-add-keybindings-with-prefix "C-c C-m"))
-
-(use-package cider
-  :ensure t
-  :hook (clojure-mode . cider-mode)
-  :config
-  (setq cider-show-error-buffer 'only-in-repl)
-  (cider-auto-test-mode 1))
-
-;(setq pop-up-windows nil)
-
-(use-package paredit
-  :ensure t
-  :hook ((clojure-mode . paredit-mode)
-         (emacs-lisp-mode . paredit-mode)))
-
-(use-package which-key
-  :ensure t
-  :config (which-key-mode))
-
-(use-package rainbow-delimiters
-  :ensure t
-  :hook ((clojure-mode . rainbow-delimiters-mode)
-         (emacs-lisp-mode . rainbow-delimiters-mode)))
-
-;;; http://xenodium.com/showhide-emacs-dired-details-in-style
-(use-package dired
-  :hook (dired-mode . dired-hide-details-mode)
-  :config
-  (use-package diredfl
+  ;; Markdown - https://jblevins.org/projects/markdown-mode/
+  (use-package markdown-mode
     :ensure t
-    :config (diredfl-global-mode 1)))
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
 
-(global-linum-mode t)
-(put 'narrow-to-region 'disabled nil)
+  ;; Org
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+  (global-set-key "\C-cl" 'org-store-link)
+
+  (use-package ox-gfm
+    :ensure t
+    :after org)
+
+  ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
+  (use-package dired
+    :ensure nil
+    :hook (dired-mode . dired-hide-details-mode)
+    :config
+    ;; Colourful columns.
+    (use-package diredfl
+      :config
+      (diredfl-global-mode 1))
+    (use-package dired-git-info
+      :ensure t
+      :bind (:map dired-mode-map
+                  (")" . dired-git-info-mode))))
+
+  ;; Lisp & Clojure
+  (use-package cider
+    :hook clojure-mode-hook
+    :config
+    ;; (setenv "JAVA_HOME" "/usr/local/opt/openjdk/libexec/openjdk.jdk/Contents/Home")
+    (exec-path-from-shell-copy-env "JAVA_HOME")
+    (setq cider-repl-pop-to-buffer-on-connect 'display-only)
+    (setq cider-repl-display-in-current-window nil))
+
+  ;; Server
+  (server-start)
+
+   ;;; Trailing whitespace is bad and you should feel bad
+  (customize-set-variable 'show-trailing-whitespace t)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  ;; Just a message for me, and a placeholder to add stuff at the end
+  ;; without having to change too many lines.
+  (message "Ready to rock"))
+;; End prevent of special filename parsing
+
+;; Set GC threshold to 1GB
+(setq gc-cons-threshold (* 1000 1000))
