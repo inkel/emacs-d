@@ -79,6 +79,11 @@
   ;; Adds a new line at the last line
   (setq require-final-newline t)
 
+  ;; Analyze script hash-bang and mark it as executable if possible on
+  ;; first saven
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
+
   ;;; Sound off
   (setq ring-bell-function 'ignore)
   (setq visible-bell t)
