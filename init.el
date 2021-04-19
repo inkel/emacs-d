@@ -271,7 +271,8 @@
 
   ;; Grafana
   ;;; Jsonnet
-  (use-package jsonnet-mode)
+  (use-package jsonnet-mode
+    :config (setq jsonnet-indent-level 2))
 
   ;;(use-package terraform-mode)
 
