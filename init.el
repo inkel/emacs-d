@@ -345,7 +345,9 @@
     (setq cider-repl-display-in-current-window nil))
 
   ;; Server
-  (server-start)
+  (use-package server
+    :config (unless (server-running-p)
+              (server-start)))
 
    ;;; Trailing whitespace is bad and you should feel bad
   (customize-set-variable 'show-trailing-whitespace t)
