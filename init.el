@@ -29,8 +29,9 @@
 
   ;; Package management
   (customize-set-variable 'package-archives
-                          '(("gnu"       . "https://elpa.gnu.org/packages/")
-                            ("melpa"     . "https://melpa.org/packages/")))
+                          '(("gnu"   . "https://elpa.gnu.org/packages/")
+                            ("org"   . "https://orgmode.org/elpa/")
+                            ("melpa" . "https://melpa.org/packages/")))
 
   (package-initialize)
 
@@ -313,14 +314,33 @@
     :init (setq markdown-command "multimarkdown"))
 
   ;; Org
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cb" 'org-switchb)
-  (global-set-key "\C-cl" 'org-store-link)
+  (use-package org
+    :pin org
+    :config
+    (global-set-key "\C-ca" 'org-agenda)
+    (global-set-key "\C-cc" 'org-capture)
+    (global-set-key "\C-cb" 'org-switchb)
+    (global-set-key "\C-cl" 'org-store-link)
 
-  (use-package ox-gfm
-    :ensure t
-    :after org)
+    (use-package ox-gfm
+      :ensure t
+      :after org)
+
+    (require 'ob)
+
+    (require 'ob-shell)
+
+    (require 'org-tempo)
+
+    :init
+    (setq org-babel-no-eval-on-ctrl-c-ctrl-c nil
+          org-confirm-babel-evaluate nil)
+
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (shell . t))))
 
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
