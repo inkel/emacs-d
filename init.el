@@ -287,10 +287,7 @@
     :init (setq lsp-keymap-prefix "s-l")
     :hook ((before-save . lsp-format-buffer)
            (before-save . lsp-organize-imports)
-           (go-mode . lsp-deferred))
-    :bind (("C-c e d" . lsp-find-definition)
-           ("C-c e r" . lsp-find-references)
-           ("C-c e R" . lsp-rename)))
+           (go-mode . lsp-deferred)))
 
   (with-eval-after-load 'lsp-mode
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
