@@ -250,6 +250,12 @@
   (use-package selectrum
     :config (selectrum-mode +1))
 
+  ;; the silver searcher
+  (use-package ag
+    :config (setq ag-highlight-search t
+                  ag-reuse-window t
+                  ag-reuse-buffers t))
+
   ;; undo-tree
   ;; http://www.dr-qubit.org/undo-tree.html
   (use-package undo-tree
