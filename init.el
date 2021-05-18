@@ -173,18 +173,19 @@
   ;;; Use a theme
   (load-theme 'wheatgrass)
 
-  ;;; Default font to Go Mono, if available
+  ;;; Fonts
   ;;; https://blog.golang.org/go-fonts
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Go Mono" :height 160))
-
   ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
-
   ;;; https://coding-fonts.css-tricks.com/fonts/hack/
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Hack" :height 140))
+  (defun inkel/set-font (family)
+    (condition-case nil
+        (set-face-attribute 'default nil :family family :height 140)))
+
+  (defun inkel/set-font-go-mono () (interactive) (inkel/set-font "Go Mono"))
+  (defun inkel/set-font-source-code-pro () (interactive) (inkel/set-font "Source Code Pro"))
+  (defun inkel/set-font-hack () (interactive) (inkel/set-font "Hack"))
+
+  (inkel/set-font-source-code-pro)
 
   ;;; Disable startup screen
   (setq startup-screen-inhibit-startup-screen t
