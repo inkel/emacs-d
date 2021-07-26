@@ -283,7 +283,9 @@
   (use-package jsonnet-mode
     :config (setq jsonnet-indent-level 2))
 
-  ;;(use-package terraform-mode)
+  (use-package terraform-mode
+    :config (use-package company-terraform
+              :config (company-terraform-init)))
 
   (use-package yaml-mode)
 
