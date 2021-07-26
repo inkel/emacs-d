@@ -339,6 +339,8 @@
     :init
     (setq org-babel-no-eval-on-ctrl-c-ctrl-c nil
           org-confirm-babel-evaluate nil)
+    (setq org-src-block-faces '(("shell" (:foreground "#eeeeee"))))
+    (setq org-adapt-indentation nil)
 
     :config
     (org-babel-do-load-languages
