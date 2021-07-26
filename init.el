@@ -53,7 +53,8 @@
   ;; Misc settings
   ;;; Completion - https://company-mode.github.io/
   (use-package company
-    :hook (after-init . global-company-mode))
+    :init (global-company-mode))
+
   ;;; Yasnippet - http://joaotavora.github.io/yasnippet/
   (use-package yasnippet
     :config (yas-global-mode))
