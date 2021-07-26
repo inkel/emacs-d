@@ -12,11 +12,15 @@
         crux-move-beginning-of-line
         dired-toggle-read-only
         downcase-region
+        electric-newline-and-maybe-indent
         enh-ruby-electric-brace
         go-mode-insert-and-indent
         kill-buffer
         mark-word
+        markdown-outdent-or-delete
+        org-ctrl-c-ctrl-c
         org-delete-char
+        org-end-of-line
         ruby-electric-curlies
         ruby-electric-space
         sh-assignment
@@ -41,7 +45,9 @@
         magit-status
         markdown-exdent-or-delete
         mouse-set-region
+        org-meta-return
         org-self-insert-command
+        org-time-stamp
         ruby-electric-matching-char
         shell-command-on-region
         ))
