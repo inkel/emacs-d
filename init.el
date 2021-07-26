@@ -290,6 +290,12 @@
   (use-package dockerfile-mode)
 
   ;; General programming
+  (use-package flymake
+    :hook ((prog-mode . flymake-mode))
+    :bind (:map flymake-mode-map
+                ("M-n" . 'flymake-goto-next-error)
+                ("M-p" . 'flymake-goto-prev-error)))
+
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
     :init (setq lsp-keymap-prefix "s-l")
