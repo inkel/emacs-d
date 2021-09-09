@@ -174,6 +174,30 @@
   ;;; Use a theme
   (load-theme 'wheatgrass)
 
+  ;;; Install fonts for modeline - https://github.com/domtronn/all-the-icons.el
+  (use-package all-the-icons)
+
+  ;;; Doom modeline - https://github.com/seagle0128/doom-modeline
+  (use-package doom-modeline
+    :ensure t
+    :hook (after-init . doom-modeline-mode))
+
+  ;;; Doom-themes
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    (load-theme 'doom-solarized-dark t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
   ;;; Fonts
   ;;; https://blog.golang.org/go-fonts
   ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
