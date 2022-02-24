@@ -138,6 +138,9 @@
   (global-set-key (kbd "C-z") nil)
   (global-set-key (kbd "C-x C-z") nil)
 
+  ;;; Find file at point is great
+  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+
   ;;; Glorious package to let you know what binding are available
   (use-package which-key
     :defer nil
