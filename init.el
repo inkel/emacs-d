@@ -311,6 +311,7 @@
     :config (setq jsonnet-indent-level 2))
 
   (use-package terraform-mode
+    :hook ((terraform-mode . terraform-format-on-save-mode))
     :config (use-package company-terraform
               :config (company-terraform-init)))
 
