@@ -390,6 +390,8 @@
     :ensure nil
     :hook (dired-mode . dired-hide-details-mode)
     :config
+    ;; Reuse buffers - https://www.manueluberti.eu//emacs/2021/07/14/dired/
+    (setq dired-kill-when-opening-new-dired-buffer t)
     ;; Colourful columns.
     (use-package diredfl
       :config
