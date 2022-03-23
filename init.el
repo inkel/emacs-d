@@ -254,11 +254,11 @@
     :config
     ;; Speeding up magit-status
     ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
-    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 
     (defun inkel/magit-log-edit-mode-hook ()
       (setq fill-column 72)
