@@ -29,8 +29,9 @@
 
   ;; Package management
   (customize-set-variable 'package-archives
-                          '(("gnu"       . "https://elpa.gnu.org/packages/")
-                            ("melpa"     . "https://melpa.org/packages/")))
+                          '(("gnu"   . "https://elpa.gnu.org/packages/")
+                            ("org"   . "https://orgmode.org/elpa/")
+                            ("melpa" . "https://melpa.org/packages/")))
 
   (package-initialize)
 
@@ -52,7 +53,8 @@
   ;; Misc settings
   ;;; Completion - https://company-mode.github.io/
   (use-package company
-    :hook (after-init . global-company-mode))
+    :init (global-company-mode))
+
   ;;; Yasnippet - http://joaotavora.github.io/yasnippet/
   (use-package yasnippet
     :config (yas-global-mode))
@@ -136,6 +138,9 @@
   (global-set-key (kbd "C-z") nil)
   (global-set-key (kbd "C-x C-z") nil)
 
+  ;;; Find file at point is great
+  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+
   ;;; Glorious package to let you know what binding are available
   (use-package which-key
     :defer nil
@@ -170,20 +175,45 @@
     (global-hl-line-mode -1))
 
   ;;; Use a theme
-  (load-theme 'wheatgrass)
+  ;;(load-theme 'solarized-light)
 
-  ;;; Default font to Go Mono, if available
+  ;;; Install fonts for modeline - https://github.com/domtronn/all-the-icons.el
+  (use-package all-the-icons)
+
+  ;;; Doom modeline - https://github.com/seagle0128/doom-modeline
+  (use-package doom-modeline
+    :ensure t
+    :hook (after-init . doom-modeline-mode))
+
+  ;;; Doom-themes
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    (load-theme 'doom-solarized-light t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
+  ;;; Fonts
   ;;; https://blog.golang.org/go-fonts
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Go Mono" :height 160))
-
   ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
-
   ;;; https://coding-fonts.css-tricks.com/fonts/hack/
-  (condition-case nil
-      (set-face-attribute 'default nil :family "Hack" :height 140))
+  (defun inkel/set-font (family)
+    (condition-case nil
+        (set-face-attribute 'default nil :family family :height 140)))
+
+  (defun inkel/set-font-go-mono () (interactive) (inkel/set-font "Go Mono"))
+  (defun inkel/set-font-source-code-pro () (interactive) (inkel/set-font "Source Code Pro"))
+  (defun inkel/set-font-hack () (interactive) (inkel/set-font "Hack"))
+
+  (inkel/set-font-go-mono)
 
   ;;; Disable startup screen
   (setq startup-screen-inhibit-startup-screen t
@@ -224,11 +254,11 @@
     :config
     ;; Speeding up magit-status
     ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
-    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 
     (defun inkel/magit-log-edit-mode-hook ()
       (setq fill-column 72)
@@ -241,6 +271,9 @@
       ad-do-it
       (delete-other-windows)))
 
+  (use-package forge
+    :after magit)
+
   ;; ibuffer
   (use-package ibuffer
     :bind ("C-x C-b" . ibuffer))
@@ -249,10 +282,18 @@
   (use-package selectrum
     :config (selectrum-mode +1))
 
+  ;; the silver searcher
+  (use-package ag
+    :config (setq ag-highlight-search t
+                  ag-reuse-window t
+                  ag-reuse-buffers t))
+
   ;; undo-tree
   ;; http://www.dr-qubit.org/undo-tree.html
   (use-package undo-tree
-    :config (global-undo-tree-mode))
+    :config
+    (global-undo-tree-mode)
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
   ;; ace-window - navigate windows easily
   (use-package ace-window
@@ -270,26 +311,67 @@
   (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
 
   ;; Grafana
+  (defun inkel/on-call ()
+    (interactive)
+    (find-file "~/dev/grafana/org/on-call.org"))
+
+  (defun inkel/find-file-deployment_tools (filename)
+    (interactive "FFind file: ")
+    (cd (expand-file-name "~/dev/grafana/repos/deployment_tools/"))
+    (switch-to-buffer (find-file-noselect filename)))
+
   ;;; Jsonnet
   (use-package jsonnet-mode
     :config (setq jsonnet-indent-level 2))
 
-  ;;(use-package terraform-mode)
+  (use-package jq-mode
+    :mode (("\\.jq$" . jq-mode))
+    :bind (:map jsonnet-mode-map
+                ("C-c Cj" . jq-interactively)))
+
+  (use-package jsonian
+    :after so-long
+    :custom (jsonian-no-so-long-mode))
+
+  (use-package terraform-mode
+    :hook ((terraform-mode . terraform-format-on-save-mode))
+    :config (use-package company-terraform
+              :config (company-terraform-init)))
+
+  ;; HCL
+  (defun inkel/hclfmt-region ()
+    (interactive)
+    (shell-command-on-region (region-beginning) (region-end)
+                             "hclfmt"
+                             nil
+                             t))
+
+  (defun inkel/hclfmt-buffer ()
+    (interactive)
+    (shell-command-on-region (point-min) (point-max)
+                             "hclfmt"
+                             nil
+                             t))
 
   (use-package yaml-mode)
 
   (use-package dockerfile-mode)
 
   ;; General programming
+  (use-package flymake
+    :hook ((prog-mode . flymake-mode))
+    :bind (:map flymake-mode-map
+                ("M-n" . 'flymake-goto-next-error)
+                ("M-p" . 'flymake-goto-prev-error)))
+
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
     :init (setq lsp-keymap-prefix "s-l")
     :hook ((before-save . lsp-format-buffer)
            (before-save . lsp-organize-imports)
-           (go-mode . lsp-deferred))
-    :bind (("C-c e d" . lsp-find-definition)
-           ("C-c e r" . lsp-find-references)
-           ("C-c e R" . lsp-rename)))
+           (go-mode . lsp-deferred)))
+
+  (use-package lsp-ui)
 
   (with-eval-after-load 'lsp-mode
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
@@ -300,8 +382,33 @@
   (setq lsp-eldoc-render-all t)
   (setq lsp-gopls-complete-unimported t)
 
+  (defun inkel/go--file-imports (filename)
+    (let ((command (format "go list -f '{{range .Imports}}{{println .}}{{end}}' %s" filename)))
+      (split-string (shell-command-to-string command))))
+
+  (defun inkel/go-file-imports ()
+    (interactive)
+    (let* ((filename (buffer-file-name (current-buffer)))
+           (imports (inkel/go--file-imports filename)))
+      (browse-url (concat "https://pkg.go.dev/" (completing-read "Select package: " imports)))))
+
+  (defun inkel/go-package-docs ()
+    (interactive)
+    (browse-url (concat "https://pkg.go.dev/" (thing-at-point 'filename t))))
+
   (use-package go-mode
+    :bind (:map go-mode-map
+                ("s-l d" . inkel/go-package-docs))
     :hook (go-mode . lsp))
+
+  ;; Rust yuck
+  (defun inkel/rust-hook ()
+    (setq indent-tabs-mode nil
+          rust-format-on-save t))
+  (use-package rust-mode
+    :config
+    (add-hook 'rust-mode-hook 'inkel/rust-hook)
+    (define-key rust-mode-map (kbd "C-c C-c") 'rust-run))
 
   ;; Markdown - https://jblevins.org/projects/markdown-mode/
   (use-package markdown-mode
@@ -313,24 +420,69 @@
     :init (setq markdown-command "multimarkdown"))
 
   ;; Org
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cb" 'org-switchb)
-  (global-set-key "\C-cl" 'org-store-link)
+  (use-package org
+    :pin org
+    :config
+    (global-set-key "\C-ca" 'org-agenda)
+    (global-set-key "\C-cc" 'org-capture)
+    (global-set-key "\C-cb" 'org-switchb)
+    (global-set-key "\C-cl" 'org-store-link)
 
-  (use-package ox-gfm
-    :ensure t
-    :after org)
+    (use-package ox-gfm
+      :ensure t
+      :after org)
+
+    (require 'ob)
+
+    (require 'ob-shell)
+
+    (require 'org-tempo)
+
+    (require 'ob-promql "~/.emacs.d/ob-promql.el")
+
+    :init
+    (setq org-babel-no-eval-on-ctrl-c-ctrl-c nil
+          org-confirm-babel-evaluate nil)
+    (setq org-src-block-faces '(("shell" (:foreground "#eeeeee"))))
+    (setq org-adapt-indentation nil)
+
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (shell . t))))
+
+  (setq org-directory "~/dev/grafana/org")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (define-key global-map "\C-cc" 'org-capture)
+
+  (setq org-capture-templates
+        '(("o" "On-Call" item (file+datetree "on-call.org") "")))
+
+  ;; Ce non-existing directory automatically
+  ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
+  (defun inkel/auto-create-missing-directory ()
+    (let ((target-dir (file-name-directory buffer-file-name)))
+      (unless (file-exists-p target-dir)
+        (make-directory target-dir t))))
+  (add-to-list 'find-file-not-found-functions #'inkel/auto-create-missing-directory)
 
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
     :hook (dired-mode . dired-hide-details-mode)
+    :bind (:map global-map
+                ("C-x C-d" . dired-jump))
     :config
+    ;; Reuse buffers - https://www.manueluberti.eu//emacs/2021/07/14/dired/
+    (setq dired-kill-when-opening-new-dired-buffer t)
+    (use-package dired-single)
     ;; Colourful columns.
     (use-package diredfl
       :config
       (diredfl-global-mode 1))
+    (use-package all-the-icons-dired
+      :hook (dired-mode . all-the-icons-dired-mode))
     (use-package dired-git-info
       :ensure t
       :bind (:map dired-mode-map
@@ -354,6 +506,38 @@
   (customize-set-variable 'show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+  ;; ;; Email - https://www.youtube.com/watch?v=yZRyEhi4y44
+  ;; ;;; https://github.com/daviwil/emacs-from-scratch/blob/629aec3dbdffe99e2c361ffd10bd6727555a3bd3/show-notes/Emacs-Mail-01.org
+  ;; (use-package mu4e
+  ;;   :ensure nil
+  ;;   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
+  ;;   :config
+
+  ;;   ;; This is set to 't' to avoid mail syncing issues when using mbsync
+  ;;   (setq mu4e-change-filenames-when-moving t)
+
+  ;;   ;; Refresh mail using isync every 10 minutes
+  ;;   (setq mu4e-update-interval (* 10 60))
+  ;;   (setq mu4e-get-mail-command "mbsync -a")
+  ;;   (setq mu4e-maildir "~/Mail")
+
+  ;;   (use-package mu4e-alert
+  ;;     :config
+  ;;     (mu4e-alert-enable-mode-line-display)
+  ;;     (setq doom-modeline-mu4e t))
+
+  ;;   (setq mu4e-drafts-folder "/[Gmail]/Drafts")
+  ;;   (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+  ;;   (setq mu4e-refile-folder "/[Gmail]/All Mail")
+  ;;   (setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+  ;;   (setq mu4e-maildir-shortcuts
+  ;;         '((:maildir "/Inbox"    :key ?i)
+  ;;           (:maildir "/[Gmail]/Sent Mail" :key ?s)
+  ;;           (:maildir "/[Gmail]/Trash"     :key ?t)
+  ;;           (:maildir "/[Gmail]/Drafts"    :key ?d)
+  ;;           (:maildir "/[Gmail]/All Mail"  :key ?a))))
+
   ;; Just a message for me, and a placeholder to add stuff at the end
   ;; without having to change too many lines.
   (message "Ready to rock"))
@@ -361,3 +545,7 @@
 
 ;; Set GC threshold to 1GB
 (setq gc-cons-threshold (* 1000 1000))
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'magit-edit-line-commit 'disabled nil)
