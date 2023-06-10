@@ -213,7 +213,7 @@
   (defun inkel/set-font-source-code-pro () (interactive) (inkel/set-font "Source Code Pro"))
   (defun inkel/set-font-hack () (interactive) (inkel/set-font "Hack"))
 
-  (inkel/set-font-source-code-pro)
+  (inkel/set-font-go-mono)
 
   ;;; Disable startup screen
   (setq startup-screen-inhibit-startup-screen t
@@ -315,6 +315,10 @@
     (interactive)
     (find-file "~/dev/grafana/org/on-call.org"))
 
+  (defun inkel/find-file-deployment_tools (filename)
+    (interactive "FFind file: ")
+    (cd (expand-file-name "~/dev/grafana/repos/deployment_tools/"))
+    (switch-to-buffer (find-file-noselect filename)))
 
   ;;; Jsonnet
   (use-package jsonnet-mode
@@ -324,6 +328,10 @@
     :mode (("\\.jq$" . jq-mode))
     :bind (:map jsonnet-mode-map
                 ("C-c Cj" . jq-interactively)))
+
+  (use-package jsonian
+    :after so-long
+    :custom (jsonian-no-so-long-mode))
 
   (use-package terraform-mode
     :hook ((terraform-mode . terraform-format-on-save-mode))
@@ -374,7 +382,23 @@
   (setq lsp-eldoc-render-all t)
   (setq lsp-gopls-complete-unimported t)
 
+  (defun inkel/go--file-imports (filename)
+    (let ((command (format "go list -f '{{range .Imports}}{{println .}}{{end}}' %s" filename)))
+      (split-string (shell-command-to-string command))))
+
+  (defun inkel/go-file-imports ()
+    (interactive)
+    (let* ((filename (buffer-file-name (current-buffer)))
+           (imports (inkel/go--file-imports filename)))
+      (browse-url (concat "https://pkg.go.dev/" (completing-read "Select package: " imports)))))
+
+  (defun inkel/go-package-docs ()
+    (interactive)
+    (browse-url (concat "https://pkg.go.dev/" (thing-at-point 'filename t))))
+
   (use-package go-mode
+    :bind (:map go-mode-map
+                ("s-l d" . inkel/go-package-docs))
     :hook (go-mode . lsp))
 
   ;; Rust yuck
@@ -428,6 +452,13 @@
      '((emacs-lisp . t)
        (shell . t))))
 
+  (setq org-directory "~/dev/grafana/org")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (define-key global-map "\C-cc" 'org-capture)
+
+  (setq org-capture-templates
+        '(("o" "On-Call" item (file+datetree "on-call.org") "")))
+
   ;; Ce non-existing directory automatically
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
   (defun inkel/auto-create-missing-directory ()
@@ -440,6 +471,8 @@
   (use-package dired
     :ensure nil
     :hook (dired-mode . dired-hide-details-mode)
+    :bind (:map global-map
+                ("C-x C-d" . dired-jump))
     :config
     ;; Reuse buffers - https://www.manueluberti.eu//emacs/2021/07/14/dired/
     (setq dired-kill-when-opening-new-dired-buffer t)
@@ -515,3 +548,4 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(put 'magit-edit-line-commit 'disabled nil)
