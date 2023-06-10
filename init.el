@@ -175,7 +175,7 @@
     (global-hl-line-mode -1))
 
   ;;; Use a theme
-  (load-theme 'wheatgrass)
+  ;;(load-theme 'solarized-light)
 
   ;;; Install fonts for modeline - https://github.com/domtronn/all-the-icons.el
   (use-package all-the-icons)
@@ -193,7 +193,7 @@
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-    (load-theme 'doom-solarized-dark t)
+    (load-theme 'doom-solarized-light t)
 
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
@@ -271,6 +271,9 @@
       ad-do-it
       (delete-other-windows)))
 
+  (use-package forge
+    :after magit)
+
   ;; ibuffer
   (use-package ibuffer
     :bind ("C-x C-b" . ibuffer))
@@ -288,7 +291,9 @@
   ;; undo-tree
   ;; http://www.dr-qubit.org/undo-tree.html
   (use-package undo-tree
-    :config (global-undo-tree-mode))
+    :config
+    (global-undo-tree-mode)
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
   ;; ace-window - navigate windows easily
   (use-package ace-window
@@ -306,14 +311,39 @@
   (global-set-key (kbd "M-r") 'inkel/reload-emacs-configuration)
 
   ;; Grafana
+  (defun inkel/on-call ()
+    (interactive)
+    (find-file "~/dev/grafana/org/on-call.org"))
+
+
   ;;; Jsonnet
   (use-package jsonnet-mode
     :config (setq jsonnet-indent-level 2))
+
+  (use-package jq-mode
+    :mode (("\\.jq$" . jq-mode))
+    :bind (:map jsonnet-mode-map
+                ("C-c Cj" . jq-interactively)))
 
   (use-package terraform-mode
     :hook ((terraform-mode . terraform-format-on-save-mode))
     :config (use-package company-terraform
               :config (company-terraform-init)))
+
+  ;; HCL
+  (defun inkel/hclfmt-region ()
+    (interactive)
+    (shell-command-on-region (region-beginning) (region-end)
+                             "hclfmt"
+                             nil
+                             t))
+
+  (defun inkel/hclfmt-buffer ()
+    (interactive)
+    (shell-command-on-region (point-min) (point-max)
+                             "hclfmt"
+                             nil
+                             t))
 
   (use-package yaml-mode)
 
@@ -333,6 +363,8 @@
            (before-save . lsp-organize-imports)
            (go-mode . lsp-deferred)))
 
+  (use-package lsp-ui)
+
   (with-eval-after-load 'lsp-mode
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
@@ -344,6 +376,15 @@
 
   (use-package go-mode
     :hook (go-mode . lsp))
+
+  ;; Rust yuck
+  (defun inkel/rust-hook ()
+    (setq indent-tabs-mode nil
+          rust-format-on-save t))
+  (use-package rust-mode
+    :config
+    (add-hook 'rust-mode-hook 'inkel/rust-hook)
+    (define-key rust-mode-map (kbd "C-c C-c") 'rust-run))
 
   ;; Markdown - https://jblevins.org/projects/markdown-mode/
   (use-package markdown-mode
@@ -373,6 +414,8 @@
 
     (require 'org-tempo)
 
+    (require 'ob-promql "~/.emacs.d/ob-promql.el")
+
     :init
     (setq org-babel-no-eval-on-ctrl-c-ctrl-c nil
           org-confirm-babel-evaluate nil)
@@ -385,6 +428,14 @@
      '((emacs-lisp . t)
        (shell . t))))
 
+  ;; Ce non-existing directory automatically
+  ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
+  (defun inkel/auto-create-missing-directory ()
+    (let ((target-dir (file-name-directory buffer-file-name)))
+      (unless (file-exists-p target-dir)
+        (make-directory target-dir t))))
+  (add-to-list 'find-file-not-found-functions #'inkel/auto-create-missing-directory)
+
   ;; Dired - http://xenodium.com/showhide-emacs-dired-details-in-style/
   (use-package dired
     :ensure nil
@@ -392,10 +443,13 @@
     :config
     ;; Reuse buffers - https://www.manueluberti.eu//emacs/2021/07/14/dired/
     (setq dired-kill-when-opening-new-dired-buffer t)
+    (use-package dired-single)
     ;; Colourful columns.
     (use-package diredfl
       :config
       (diredfl-global-mode 1))
+    (use-package all-the-icons-dired
+      :hook (dired-mode . all-the-icons-dired-mode))
     (use-package dired-git-info
       :ensure t
       :bind (:map dired-mode-map
@@ -419,6 +473,38 @@
   (customize-set-variable 'show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+  ;; ;; Email - https://www.youtube.com/watch?v=yZRyEhi4y44
+  ;; ;;; https://github.com/daviwil/emacs-from-scratch/blob/629aec3dbdffe99e2c361ffd10bd6727555a3bd3/show-notes/Emacs-Mail-01.org
+  ;; (use-package mu4e
+  ;;   :ensure nil
+  ;;   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
+  ;;   :config
+
+  ;;   ;; This is set to 't' to avoid mail syncing issues when using mbsync
+  ;;   (setq mu4e-change-filenames-when-moving t)
+
+  ;;   ;; Refresh mail using isync every 10 minutes
+  ;;   (setq mu4e-update-interval (* 10 60))
+  ;;   (setq mu4e-get-mail-command "mbsync -a")
+  ;;   (setq mu4e-maildir "~/Mail")
+
+  ;;   (use-package mu4e-alert
+  ;;     :config
+  ;;     (mu4e-alert-enable-mode-line-display)
+  ;;     (setq doom-modeline-mu4e t))
+
+  ;;   (setq mu4e-drafts-folder "/[Gmail]/Drafts")
+  ;;   (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+  ;;   (setq mu4e-refile-folder "/[Gmail]/All Mail")
+  ;;   (setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+  ;;   (setq mu4e-maildir-shortcuts
+  ;;         '((:maildir "/Inbox"    :key ?i)
+  ;;           (:maildir "/[Gmail]/Sent Mail" :key ?s)
+  ;;           (:maildir "/[Gmail]/Trash"     :key ?t)
+  ;;           (:maildir "/[Gmail]/Drafts"    :key ?d)
+  ;;           (:maildir "/[Gmail]/All Mail"  :key ?a))))
+
   ;; Just a message for me, and a placeholder to add stuff at the end
   ;; without having to change too many lines.
   (message "Ready to rock"))
@@ -426,3 +512,6 @@
 
 ;; Set GC threshold to 1GB
 (setq gc-cons-threshold (* 1000 1000))
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
