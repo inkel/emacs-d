@@ -40,6 +40,7 @@
 (when (not (package-installed-p 'use-package))
   (package-install 'use-package))
 
+(defvar use-package-enable-imenu-support t)
 (require 'use-package)
 
 (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
@@ -76,6 +77,8 @@
   :bind (("C-z" . nil) ; do not send to background/minimize by mistake
          ("s-q" . nil) ; do not close Emacs on Mac by mistake
          ("s-p" . nil) ; do not print on Mac by mistake
+
+         ("H-`" . imenu)
 
          ("C-x C-p" . find-file-at-point))
 
@@ -336,6 +339,27 @@
 
 (use-package vertico
   :hook (after-init . vertico-mode))
+
+(use-package consult
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :bind (;; Better yank?
+         ("M-y" . consult-yank-pop)
+         ;; M-g bindings in `goto-map'
+         ("M-g f" . consult-flymake)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-g o" . consult-outline)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)))
+
+(use-package consult-eglot :after consult)
+
+(use-package marginalia
+  :bind (:map minibuffer-mode-map
+              ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
 
 (use-package smartscan
   :ensure t
