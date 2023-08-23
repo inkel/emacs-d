@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Range
+# key: range
+# group: Range
+# --
+for _, ${1:$(substring yas-text 0 1)} := range ${1:slice} {
+	$0
+}

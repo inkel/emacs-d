@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Sub-test
+# key: trun
+# group: Testing
+# --
+t.Run($1, func(t *testing.T) {
+	$0
+})

@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: Scanner
+# key: scanner
+# --
+s := bufio.NewScanner(r)
+
+for s.Scan() {
+	l := s.Text()
+    $0
+}
+
+if err := s.Err(); err != nil {
+   return fmt.Errorf("scanning: %w", err)
+}

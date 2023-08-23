@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Package
+# key: pkg
+# --
+package ${1:`(car (last (file-name-split buffer-file-name) 2))`}

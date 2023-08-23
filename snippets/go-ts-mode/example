@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Example
+# key: example
+# group: Testing
+# --
+func Example() {
+	$0
+}

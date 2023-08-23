@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Benchmark
+# key: bench
+# group: Testing
+# --
+func Benchmark$1(t *testing.B) {
+	$0
+}

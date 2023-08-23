@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: Real main with context
+# key: realmainctx
+# --
+func main() {
+	ctx := context.Background()
+
+	if err := realMain(ctx); err != nil {
+    	fmt.Fprintln(os.Stderr, err)
+        os.Exit(1)
+    }
+}
+
+func realMain(ctx context.Context) error {
+	return nil
+}
