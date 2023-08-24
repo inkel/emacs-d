@@ -85,6 +85,7 @@
   :init
   (setq tab-always-indent 'complete)
   (setq completion-cycle-threshold 3)
+  (setq x-stretch-cursor t)
 
   :custom
   ;; Mac stuff
