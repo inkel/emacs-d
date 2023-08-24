@@ -281,7 +281,7 @@
 (add-hook 'project-find-functions #'project-find-go-module)
 
 (use-package go-ts-mode
-  :custom (go-ts-mode-indent-offset 8)
+  :custom (go-ts-mode-indent-offset tab-width)
   :mode "\\.go$")
 
 (add-to-list 'major-mode-remap-alist
