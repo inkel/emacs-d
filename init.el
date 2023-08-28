@@ -107,6 +107,7 @@
   (visible-bell t)
   (ring-bell-function 'ignore)
   (show-trailing-whitespace t)
+  (pixel-scroll-precision-mode)
 
   ;; Misc
   (load-prefer-newer t)
