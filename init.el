@@ -412,11 +412,18 @@
 ;; Org
 (use-package org
   :pin org
-  :config
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cb" 'org-switchb)
-  (global-set-key "\C-cl" 'org-store-link)
+
+  :custom
+  (org-directory "~/dev/grafana/org")
+  (org-default-notes-file (concat org-directory "/notes.org"))
+
+  (org-capture-templates '(("t" "TODO" entry (file+headline org-default-nodes-file "Tasks")
+                            "* TODO %?\n  %i\n  %a")
+                           ("j" "Journal" entry (file+datetree "journal.org")
+                            "* %?\nEntered on %U\n  %^g%i")
+                           ("o" "On-Call" item (file+datetree "on-call.org")
+                            "")
+                           ))
 
   (use-package ox-gfm
     :ensure t
@@ -433,10 +440,14 @@
   :init
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c nil
         org-confirm-babel-evaluate nil)
-  ;;(setq org-src-block-faces '(("shell" (:foreground "#eeeeee"))))
   (setq org-adapt-indentation nil)
 
   :config
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+  (global-set-key "\C-cl" 'org-store-link)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
