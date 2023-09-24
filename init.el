@@ -552,6 +552,12 @@
 
 (load-theme 'doom-solarized-light t)
 
+(use-package shell-pop
+  :bind (("C-x t" . shell-pop))
+  :custom
+  (shell-pop-universal-key "C-x t")
+  (shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
+
 ;;   ;;; Fonts
 ;;   ;;; https://blog.golang.org/go-fonts
 ;;   ;;; https://coding-fonts.css-tricks.com/fonts/source-code-pro/
