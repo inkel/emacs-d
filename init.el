@@ -343,6 +343,9 @@
     ad-do-it
     (delete-other-windows)))
 
+(use-package git-link
+  :bind (("C-c g l" . git-link)))
+
 (use-package vertico
   :hook (after-init . vertico-mode))
 
