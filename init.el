@@ -692,23 +692,14 @@
 ;;     (add-hook 'rust-mode-hook 'inkel/rust-hook)
 ;;     (define-key rust-mode-map (kbd "C-c C-c") 'rust-run))
 
-;;   ;; Markdown - https://jblevins.org/projects/markdown-mode/
-;;   (use-package markdown-mode
-;;     :ensure t
-;;     :commands (markdown-mode gfm-mode)
-;;     :mode (("README\\.md\\'" . gfm-mode)
-;;            ("\\.md\\'" . markdown-mode)
-;;            ("\\.markdown\\'" . markdown-mode))
-;;     :init (setq markdown-command "multimarkdown"))
-
-
-
-;;   (setq org-directory "~/dev/grafana/org")
-;;   (setq org-default-notes-file (concat org-directory "/notes.org"))
-;;   (define-key global-map "\C-cc" 'org-capture)
-
-;;   (setq org-capture-templates
-;;         '(("o" "On-Call" item (file+datetree "on-call.org") "")))
+;; Markdown - https://jblevins.org/projects/markdown-mode/
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :custom (markdown-command "multimarkdown"))
 
 ;; Create non-existing directory automatically
 ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
