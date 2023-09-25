@@ -319,6 +319,10 @@
 ;; Magit - Enough reason to use Emacs
 (use-package magit
   :bind (("C-x g" . magit-status))
+
+  :custom
+  (magit-bind-magit-project-status t)
+
   :config
   ;; Speeding up magit-status
   ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
