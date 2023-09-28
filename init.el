@@ -459,6 +459,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
+     (awk . t)
      (shell . t))))
 
 (use-package savehist
