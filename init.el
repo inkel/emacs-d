@@ -367,6 +367,7 @@
 (use-package marginalia
   :bind (:map minibuffer-mode-map
               ("M-A" . marginalia-cycle))
+  :commands (marginalia-mode)
   :init
   (marginalia-mode))
 
