@@ -47,7 +47,7 @@
                          ("org"   . "https://orgmode.org/elpa/")
                          ("melpa" . "https://melpa.org/packages/"))
       use-package-always-ensure t
-      use-package-always-defer t
+      use-package-always-defer nil
       use-package-verbose init-file-debug
       use-package-expand-minimally (not init-file-debug)
       debug-on-error init-file-debug)
@@ -319,9 +319,12 @@
 ;; Magit - Enough reason to use Emacs
 (use-package magit
   :bind (("C-x g" . magit-status))
+         ;:magit-status-mode-map ("q" . magit-quit-session))
 
   :custom
   (magit-bind-magit-project-status t)
+  (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (magit-bury-buffer-function #'magit-restore-window-configuration)
 
   :config
   ;; Speeding up magit-status
@@ -338,10 +341,18 @@
     (turn-on-auto-fill))
   (add-hook 'magit-log-edit-mode-hook 'inkel/magit-log-edit-mode-hook)
   (setq vc-handled-backends (delq 'Git vc-handled-backends))
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows)))
+  ;; (defadvice magit-status (around magit-fullscreen activate)
+  ;;   (window-configuration-to-register :magit-fullscreen)
+  ;;   ad-do-it
+  ;;   (delete-other-windows))
+
+  (defun magit-quit-session ()
+    "Restores the previous window configuration and kills the magit buffer."
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+
+  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
 
 (use-package git-link
   :bind (("C-c g l" . git-link)))
@@ -355,7 +366,7 @@
   :bind (;; Better yank?
          ("M-y" . consult-yank-pop)
          ;; M-g bindings in `goto-map'
-         ("M-g f" . consult-flymake)
+         ;; ("M-g f" . consult-flymake)
          ("M-g g" . consult-goto-line)
          ("M-g M-g" . consult-goto-line)
          ("M-g o" . consult-outline)
@@ -380,13 +391,18 @@
   :init (add-hook 'prog-mode-hook #'smartscan-mode)
   :diminish)
 
-(use-package flymake
-  :hook ((prog-mode . flymake-mode))
-  :commands (flymake-goto-next-error
-             flymake-goto-prev-error)
-  :bind (:map flymake-mode-map
-              ("s-n" . 'flymake-goto-next-error)
-              ("s-p" . 'flymake-goto-prev-error)))
+(use-package ag
+  ;; :config
+  ;; (setq ag-executable "/opt/homebrew/bin/ag")
+  )
+
+;; (use-package flymake
+;;   :hook ((prog-mode . flymake-mode))
+;;   :commands (flymake-goto-next-error
+;;              flymake-goto-prev-error)
+;;   :bind (:map flymake-mode-map
+;;               ("s-n" . 'flymake-goto-next-error)
+;;               ("s-p" . 'flymake-goto-prev-error)))
 
 (defun inkel/go-file-imports (filename)
   (cl-flet* ((stdlib-p (pkg) (not (string-match-p "\\." pkg)))
@@ -408,18 +424,54 @@
 	          ("C-c M-p" . inkel/go-package-docs)))
 
 (use-package terraform-mode
-  :hook ((terraform-mode . terraform-format-on-save-mode))
+  :hook ((terraform-mode . terraform-format-on-save-mode)))
+
+(use-package company-terraform
+  :after terraform-mode
   :commands (company-terraform-init)
-  :config (use-package company-terraform
-            :config (company-terraform-init)))
+  :config (company-terraform-init))
+
+(defconst inkel/terraform-data-resource-re "^\\(data\\|resource\\) \"\\(\\w+\\)_\\([a-z_]+\\)\"")
+
+(defun inkel/terraform-list-data-and-resources (string)
+  "Return list of unique Terraform data and resources declarations in STRING."
+  (save-match-data
+    (let ((pos 0)
+          matches)
+      (while (string-match inkel/terraform-data-resource-re string pos)
+        (push (match-string-no-properties 0 string) matches)
+        (setq pos (match-end 0)))
+      (delete-dups matches))))
+
+(defun inkel/terraform-parse-data-resource (string)
+  "Parse STRING and return type, provider and name."
+  (string-match inkel/terraform-data-resource-re string 0)
+  (list (match-string-no-properties 1 string)
+        (match-string-no-properties 2 string)
+        (match-string-no-properties 3 string)))
+
+(defun inkel/terraform-doc (&optional type provider name)
+  "Open Terraform documentation for PROVIDER block TYPE named NAME."
+  (interactive (inkel/terraform-parse-data-resource
+                      (completing-read "Select data/resource: " (inkel/terraform-list-data-and-resources (buffer-string)))))
+  (let* ((type (if (string= "data" type)
+                   "data-sources"
+                 "resources"))
+         (url (format "https://registry.terraform.io/providers/hashicorp/%s/latest/docs/%s/%s" provider type name)))
+    (browse-url url)))
 
 (use-package yaml-mode)
 
-(use-package dockerfile-mode)
+(use-package dockerfile-mode
+  :load-path "~/dev/dockerfile-mode/")
 
 ;; Org
 (use-package org
   :pin org
+
+  :defer nil
+
+  :commands (org-html-export-to-html)
 
   :custom
   (org-directory "~/dev/grafana/org")
@@ -433,16 +485,6 @@
                             "")
                            ))
 
-  (use-package ox-gfm
-    :ensure t
-    :after org)
-
-  (require 'ob)
-
-  (require 'ob-shell)
-
-  (require 'org-tempo)
-
   ;; (require 'ob-promql "~/.emacs.d/ob-promql.el")
 
   :init
@@ -455,12 +497,30 @@
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-cb" 'org-switchb)
   (global-set-key "\C-cl" 'org-store-link)
+)
 
+(use-package ob
+  :after org
+  :config
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (awk . t)
      (shell . t))))
+
+(use-package ob-shell
+  :after org)
+
+(use-package ox-gfm
+  :after org)
+
+(use-package ox-html
+  :after org)
+
+(use-package org-tempo
+  :after org
+  :defer nil
+  :config (require 'org-tempo))
 
 (use-package savehist
   :unless noninteractive
@@ -631,17 +691,17 @@
 ;;     (switch-to-buffer (find-file-noselect filename)))
 ;;   (global-set-key (kbd "C-c C-x C-f") 'inkel/find-file-deployment_tools)
 
-;;   ;; avy - https://www.youtube.com/watch?v=SZ9ciomvgNo
-;;   ;; https://irreal.org/blog/?p=11507
-;;   (use-package avy
-;;   :ensure t
-;;   :diminish avy-mode
-;;   :bind (("s-a"     . avy-goto-word-1)
-;;          ("s-s"     . avy-goto-char-timer)
-;;          ("M-g M-g" . avy-goto-line)
-;;          ("M-g g"   . avy-goto-line)
-;;          ("s-A"     . avy-goto-char))
-;;   :config (setq avy-all-windows nil))
+  ;; avy - https://www.youtube.com/watch?v=SZ9ciomvgNo
+  ;; https://irreal.org/blog/?p=11507
+  (use-package avy
+  :ensure t
+  :diminish avy-mode
+  :bind (("s-a"     . avy-goto-word-1)
+         ("s-s"     . avy-goto-char-timer)
+         ("M-g M-g" . avy-goto-line)
+         ("M-g g"   . avy-goto-line)
+         ("s-A"     . avy-goto-char))
+  :config (setq avy-all-windows nil))
 
 ;;   ;;; Jsonnet
 ;;   (use-package jsonnet-mode
@@ -783,6 +843,15 @@
 ;; (put 'downcase-region 'disabled nil)
 ;; (put 'narrow-to-region 'disabled nil)
 ;; (put 'magit-edit-line-commit 'disabled nil)
+
+(defun grafana/export-on-call ()
+  "Export the latest daily entry for my Grafana on-call journal."
+  (interactive)
+  (let ((buffer (find-file-noselect "~/dev/grafana/org/on-call.org")))
+    (switch-to-buffer buffer)
+    (goto-char (point-max))
+    (org-open-file (org-html-export-to-html nil t nil nil nil))
+    (kill-buffer buffer)))
 
 (provide 'init)
 ;;; init.el ends here

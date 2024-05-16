@@ -28,11 +28,13 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ace-window
         backward-sentence
         beginning-of-buffer
         counsel-find-file
         end-of-buffer
         eval-print-last-sexp
+        flymake-goto-next-error
         go-goto-imports
         graphviz-dot-preview
         ido-switch-buffer
