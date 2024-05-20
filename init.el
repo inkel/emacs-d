@@ -494,30 +494,20 @@
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-cb" 'org-switchb)
   (global-set-key "\C-cl" 'org-store-link)
-)
 
-(use-package ob
-  :after org
-  :config
+  (require 'ob)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (awk . t)
-     (shell . t))))
+     (shell . t)))
 
-(use-package ob-shell
-  :after org)
+  (require 'ob-shell)
+  (require 'ox-html)
+  (require 'org-tempo))
 
 (use-package ox-gfm
   :after org)
-
-(use-package ox-html
-  :after org)
-
-(use-package org-tempo
-  :after org
-  :defer nil
-  :config (require 'org-tempo))
 
 (use-package savehist
   :unless noninteractive
