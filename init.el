@@ -391,10 +391,7 @@
   :init (add-hook 'prog-mode-hook #'smartscan-mode)
   :diminish)
 
-(use-package ag
-  ;; :config
-  ;; (setq ag-executable "/opt/homebrew/bin/ag")
-  )
+(use-package ag)
 
 ;; (use-package flymake
 ;;   :hook ((prog-mode . flymake-mode))
