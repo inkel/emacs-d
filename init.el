@@ -319,7 +319,6 @@
 ;; Magit - Enough reason to use Emacs
 (use-package magit
   :bind (("C-x g" . magit-status))
-         ;:magit-status-mode-map ("q" . magit-quit-session))
 
   :custom
   (magit-bind-magit-project-status t)
@@ -329,7 +328,7 @@
   :config
   ;; Speeding up magit-status
   ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
-  ;; (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
@@ -352,7 +351,8 @@
     (kill-buffer)
     (jump-to-register :magit-fullscreen))
 
-  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
+                                        ;(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+  )
 
 (use-package git-link
   :bind (("C-c g l" . git-link)))
