@@ -393,13 +393,13 @@
 
 (use-package ag)
 
-;; (use-package flymake
-;;   :hook ((prog-mode . flymake-mode))
-;;   :commands (flymake-goto-next-error
-;;              flymake-goto-prev-error)
-;;   :bind (:map flymake-mode-map
-;;               ("s-n" . 'flymake-goto-next-error)
-;;               ("s-p" . 'flymake-goto-prev-error)))
+(use-package flymake
+  :hook ((prog-mode . flymake-mode))
+  :commands (flymake-goto-next-error
+             flymake-goto-prev-error)
+  :bind (:map flymake-mode-map
+              ("s-n" . 'flymake-goto-next-error)
+              ("s-p" . 'flymake-goto-prev-error)))
 
 (defun inkel/go-file-imports (filename)
   (cl-flet* ((stdlib-p (pkg) (not (string-match-p "\\." pkg)))
