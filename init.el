@@ -466,6 +466,10 @@
 (use-package dockerfile-mode
   :load-path "~/dev/dockerfile-mode/")
 
+(defun inkel/org-edit-options ()
+  (toggle-truncate-lines nil)
+  (toggle-word-wrap t))
+
 ;; Org
 (use-package org
   :pin org
@@ -498,6 +502,8 @@
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-cb" 'org-switchb)
   (global-set-key "\C-cl" 'org-store-link)
+
+  (add-hook 'org-mode-hook #'inkel/org-edit-options)
 
   (require 'ob)
   (org-babel-do-load-languages
