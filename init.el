@@ -372,7 +372,9 @@
          ;; M-g bindings in `goto-map'
          ;; ("M-g f" . consult-flymake)
          ("M-g g" . consult-goto-line)
-         ("M-g M-g" . consult-goto-line)
+         ;; ("M-g M-g" . consult-goto-line)
+         ("M-s M-b" . consult-buffer)
+         ("M-s M-f" . consult-find)
          ("M-g o" . consult-outline)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)))
@@ -696,7 +698,7 @@
   :bind (("s-a"     . avy-goto-word-1)
          ("s-s"     . avy-goto-char-timer)
          ("M-g M-g" . avy-goto-line)
-         ("M-g g"   . avy-goto-line)
+         ;; ("M-g g"   . avy-goto-line)
          ("s-A"     . avy-goto-char))
   :config (setq avy-all-windows nil))
 
