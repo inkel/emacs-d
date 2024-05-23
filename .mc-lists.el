@@ -16,6 +16,7 @@
         go-mode-insert-and-indent
         kill-buffer
         mark-word
+        markdown-outdent-or-delete
         org-delete-char
         ruby-electric-curlies
         ruby-electric-space
@@ -31,6 +32,7 @@
         ace-window
         backward-sentence
         beginning-of-buffer
+        consult-flycheck
         counsel-find-file
         end-of-buffer
         eval-print-last-sexp
@@ -46,4 +48,5 @@
         org-self-insert-command
         ruby-electric-matching-char
         shell-command-on-region
+        undo-redo
         ))

@@ -1,0 +1,748 @@
+* My Emacs literate configuration
+:PROPERTIES:
+:header-args: :tangle "init.el" :results silent
+:END:
+
+For the longest time I wanted to try the Org + Babel mode of writing my configuration file, and 2024 seemed like a good year to start doing that.
+
+** Preface
+All Emacs files require some comments that identify what the file is for and all that crap.
+
+#+begin_src emacs-lisp
+  ;;; init.el --- My Emacs configuration
+
+  ;;; Commentary:
+
+  ;;; Code:
+#+end_src
+
+** Early init
+This file is read by Emacs before anything else. It shouldn't depend on any package or frame configurations. Used mostly for basic initializations.
+
+#+begin_src emacs-lisp
+  ;; Set some sane defaults
+  (setq ring-bell-function 'ignore ; visual bell
+    visible-bell t
+    frame-title-format '("%b")
+    use-dialog-box t
+    use-file-dialog nil
+    use-short-answers t ; no more yes-or-no
+    x-stretch-cursor t
+    inhibit-splash-screen t
+    inhibit-startup-screen t
+    inhibit-x-resources t
+    inhibit-startup-echo-area-message user-login-name
+    inhibit-startup-buffer-menu t)
+
+  ;; Indentation
+  (setq standard-indent 2
+      tab-always-indent 'complete)
+  (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil)
+
+  ;; I don't want some UI elements enabled, so let's disable them.
+  (when (display-graphic-p)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (global-hl-line-mode -1))
+
+  (delete-selection-mode t)
+
+  (global-auto-revert-mode 1) ; reload files when changed
+#+end_src
+
+We don't want Emacs performing too many GC runs on startup, to make it boot as fast as possible.
+
+#+begin_src emacs-lisp
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.5)
+
+  (defvar inkel/emacs--file-name-handler-alist file-name-handler-alist)
+  (defvar inkel/emacs--vc-handled-backends vc-handled-backends)
+
+  (setq file-name-handler-alist nil
+        vc-handled-backends nil)
+
+  (defun inkel/emacs--startup-hook ()
+    "Restore defaults and report initialization time and GC collections."
+    (setq gc-cons-threshold (* 1000 1000 8)
+          gc-cons-percentage 0.1
+          file-name-handler-alist inkel/emacs--file-name-handler-alist
+          vc-handled-backends inkel/emacs--vc-handled-backends)
+    (message "Emacs ready in %.2fs with %d garbage collections."
+           (float-time (time-subtract after-init-time before-init-time))
+           gcs-done))
+
+  (add-hook 'emacs-startup-hook #'inkel/emacs--startup-hook)
+
+  ;; force GC run
+  (add-hook 'after-init-hook #'garbage-collect t)
+#+end_src
+
+I don't want my installed packages to be initialized automatically, as sometimes I install packages just to test them.
+
+#+begin_src emacs-lisp
+  (setq package-enable-at-startup nil)
+#+end_src
+
+The Go team released [[https://go.dev/blog/go-fonts][nice fonts]] which are the ones I've been using for a long time:
+
+#+begin_src emacs-lisp
+  (condition-case nil
+    (set-face-attribute 'default nil :family "Go Mono" :height 140))
+#+end_src
+
+I want my Emacs to be maximized, and that upon restart it doesn't create a new frame (maybe this was a bug?)
+
+#+begin_src emacs-lisp
+    ;; Start Emacs in full screen mode
+    (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+    (advice-add 'restart-emacs :before 'toggle-frame-fullscreen)
+#+end_src
+
+This will make some things below easier
+
+#+begin_src emacs-lisp
+  (eval-and-compile
+    (defsubst emacs-path (path)
+      (expand-file-name path user-emacs-directory)))
+
+  (defconst user-data-directory (emacs-path "data"))
+
+  (defun user-data (dir)
+    "Expands DIR filename within `user-data-directory'."
+    (expand-file-name dir user-data-directory))
+#+end_src
+
+Some binaries are installed outside the typical =PATH= locations, let's use the one that we have in =~/.bashrc=:
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :config (exec-path-from-shell-initialize))
+#+end_src
+
+** Init proper
+
+*** No custom file
+#+begin_src emacs-lisp
+  ;; Disable the damn thing by making it disposable.
+  (setq custom-file (make-temp-file "emacs-custom-"))
+#+end_src
+
+*** No backups
+#+begin_src emacs-lisp
+  (setq make-backup-files nil
+	backup-inhibited nil
+	create-lockfiles nil)
+#+end_src
+
+*** Be silent with native compilation
+#+begin_src emacs-lisp
+  ;; Make native compilation silent and prune its cache.
+  (when (native-comp-available-p)
+    (setq-default native-comp-async-report-warnings-errors 'silent
+                  native-compile-prune-cache t))
+#+end_src
+
+*** Keep track of opened files and placements
+#+begin_src emacs-lisp
+  (use-package savehist
+    :unless noninteractive
+    :custom
+    (savehist-additional-variables '(file-name-history
+				     kmacro-ring
+				     compile-history
+				     compile-command))
+    (savehist-ignored-variables '(load-history
+				  flyspell-auto-correct-ring
+				  org-roam-node-history
+				  magit-revision-history
+				  org-read-date-history
+				  query-replace-history
+				  yes-or-no-p-history
+				  kill-ring))
+    (savehist-autosave-interval 60)
+    (savehist-file (user-data "history"))
+    (savehist-mode t)
+    :config
+    (savehist-mode 1))
+
+  (use-package saveplace
+    :unless noninteractive
+    :custom
+    (save-place-file (user-data "places"))
+    :config
+    (save-place-mode 1))
+#+end_src
+
+*** Better buffer selection
+#+begin_src emacs-lisp
+  (use-package ibuffer
+    :bind (("C-x C-b" . ibuffer))
+    :config
+    (setq ibuffer-default-sorting-mode 'filename/process))
+#+end_src
+
+*** Where to display buffers
+#+begin_src emacs-lisp
+  ;;; https://protesilaos.com/codelog/2024-02-08-emacs-window-rules-display-buffer-alist/
+  (setq display-buffer-alist
+        '(
+        
+          ("\\*xref\\*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (dedicated . t)
+           (window-height . fit-window-to-buffer))
+        
+          ))
+#+end_src
+
+*** Packages
+
+**** Configuring =package.el= and =use-package=
+#+begin_src emacs-lisp
+  (require 'package)
+
+  (when (not (package-installed-p 'use-package))
+    (package-install 'use-package))
+
+  (defvar use-package-enable-imenu-support t)
+  (require 'use-package)
+
+  (add-hook 'package-menu-mode-hook #'hl-line-mode)
+
+  (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
+			   ("org"   . "https://orgmode.org/elpa/")
+			   ("melpa" . "https://melpa.org/packages/"))
+	use-package-always-ensure t
+	use-package-always-defer nil
+	use-package-verbose init-file-debug
+	use-package-expand-minimally (not init-file-debug)
+	debug-on-error init-file-debug)
+
+  (setq package-archive-priorities
+	'(("melpa" . 3)
+	  ("org" . 2)
+	  ("gnu" . 1)))
+
+  (defvar use-package-enable-imenu-support t)
+#+end_src
+
+**** Minibuffer
+***** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :config
+    (setq vertico-cycle t
+	  vertico-resize nil)
+    (vertico-mode 1))
+#+end_src
+
+***** Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :ensure t
+    :config
+    (marginalia-mode 1))
+#+end_src
+
+**** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :config
+    (setq completion-styles '(orderless basic)))
+#+end_src
+
+**** Consult
+Not really minibuffer only, but great addition.
+#+begin_src emacs-lisp
+  (use-package consult
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
+    :bind (("M-y" . consult-yank-pop) ;; Better yank?
+           ;; M-g bindings in `goto-map'
+            ("M-g g" . consult-goto-line)
+           ;; ("M-g M-g" . consult-goto-line)
+           ("M-s M-b" . consult-buffer)
+           ("M-s M-f" . consult-find)
+           ("M-g o" . consult-outline)
+           ("M-g i" . consult-imenu)
+           ("M-g I" . consult-imenu-multi)))
+
+  (use-package consult-flycheck
+    :ensure t
+    :after consult
+    :bind (("M-g f" . consult-flycheck)))
+
+  ;; This is useful for navigating through xref history
+  ;; https://takeonrules.com/2024/06/08/adding-a-consult-function-for-visualizing-xref/
+  (defvar consult--xref-history nil
+    "History for the `consult-recent-xref' results.")
+
+  (defun consult-recent-xref (&optional markers)
+    "Jump to a marker in MARKERS list (defaults to `xref--history'.
+
+  The command supports preview of the currently selected marker position.
+  The symbol at point is added to the future history."
+    (interactive)
+    (consult--read
+      (consult--global-mark-candidates
+        (or markers (flatten-list xref--history)))
+      :prompt "Go to Xref: "
+      :annotate (consult--line-prefix)
+      :category 'consult-location
+      :sort nil
+      :require-match t
+      :lookup #'consult--lookup-location
+      :history '(:input consult--xref-history)
+      :add-history (thing-at-point 'symbol)
+      :state (consult--jump-state)))
+#+end_src
+
+**** Completion
+[[https://github.com/minad/corfu][Corfu]] is a great package enhancing in-buffer completion in an interactive way.
+#+begin_src emacs-lisp
+  (use-package corfu
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.5)
+    (corfu-separator ?\s)
+    (corfu-quit-at-boundary 'separator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
+    :commands
+    (global-corfu-mode corfu-history-mode)
+    :init
+    (global-corfu-mode)
+    (corfu-history-mode))
+#+end_src
+
+*** Keybindings
+**** Which key
+#+begin_src emacs-lisp
+  ;; Glorious package to let you know what binding are available
+  (use-package which-key
+    :ensure t
+    :defer nil
+    :diminish which-key-mode
+    :hook (after-init . which-key-mode))
+#+end_src
+
+**** Set some useful keybindings
+#+begin_src emacs-lisp
+  (keymap-set global-map "C-z" nil)
+  (keymap-set global-map "s-q" nil)
+  (keymap-set global-map "s-p" nil)
+  (keymap-set global-map "C-x C-p" #'find-file-at-point)
+
+  (keymap-unset global-map "s-n")
+#+end_src
+
+*** Navigation & movement
+Moving between windows is easier with [[https://github.com/abo-abo/ace-window][ace-window]]:
+
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind ("M-o" . ace-window))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package imenu
+    :bind ("s-i" . imenu))
+#+end_src
+
+*** Project management
+#+begin_src emacs-lisp
+  (use-package project)
+#+end_src
+
+*** Theme
+#+begin_src emacs-lisp
+  ;; Doom-themes
+  (use-package doom-themes
+    :ensure t
+    :custom
+    (doom-themes-enable-bold t)
+    (doom-themes-enable-italic t)
+
+    :commands (doom-themes-visual-bell-config
+	       doom-themes-org-config)
+
+    :config
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
+  (load-theme 'doom-solarized-light t)
+#+end_src
+
+*** Editing
+I like editing with knowing which line number am I in. I also would like to know the column number in the modeline.
+
+#+begin_src emacs-lisp
+  (use-package display-line-numbers
+    :config (global-display-line-numbers-mode))
+  (setq column-number-mode t)
+#+end_src
+
+Having trailing whitespace is bad, really bad. Let's clear those pesky trailing whitespaces when saving.
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook #'delete-trailing-whitespace)
+#+end_src
+
+**** Crux
+#+begin_src emacs-lisp
+  ;; Use crux for some useful things, like C-a moving to the first
+  ;; character of the line instead of the beggining of the line!.
+  ;; https://github.com/bbatsov/crux
+  ;; http://pragmaticemacs.com/emacs/open-files-with-the-system-default-application/
+  ;; http://pragmaticemacs.com/emacs/move-to-the-beginning-of-a-line-the-smart-way/
+  (use-package crux
+    :ensure t
+    :bind (("C-c M-o" . crux-open-with)
+           ("C-k" . crux-kill-and-join-forward)
+           ("C-x 4 t" . crux-transpose-windows)
+           ("C-x D" . crux-delete-file-and-buffer)
+           ("C-x M-r" . crux-rename-file-and-buffer)
+           ("s-k" . crux-kill-whole-line)
+           ("C-a" . crux-move-beginning-of-line)))
+#+end_src
+
+**** Very useful to edit multiple occurrences
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind (("C-S-c C-S-c" . mc/edit-lines)
+	   ("C->" . mc/mark-next-like-this)
+	   ("C-S->" . mc/unmark-next-like-this)
+	   ("C-<" . mc/mark-previous-like-this)
+	   ("C-S-<" . mc/unmark-previous-like-this)
+	   ("C-c C->" . mc/mark-all-like-this)
+	   ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+#+end_src
+
+*** Magit
+#+begin_src emacs-lisp
+  (defun inkel/magit--log-edit-mode-hook ()
+    "Editing options for writing commit messages in Magit."
+    (setq fill-column 72)
+    (flyspell-mode t)
+    (turn-on-auto-fill))
+
+  (use-package magit
+    :bind (("C-x g" . magit-status))
+
+    :custom
+    (magit-bind-magit-project-status t)
+    (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+    (magit-bury-buffer-function #'magit-restore-window-configuration)
+
+    :config
+    ;; Speeding up magit-status
+    ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
+    ;; (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-recent-commits)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+    ;; (add-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream)
+
+    (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook)
+    (setq vc-handled-backends (delq 'Git vc-handled-backends)))
+
+  ;; (use-package magit-file-icons
+  ;;   :ensure t
+  ;;   :after magit
+  ;;   :init
+  ;;   (magit-file-icons-mode 1)
+  ;;   :custom
+  ;;   ;; These are the default values:
+  ;;   (magit-file-icons-enable-diff-file-section-icons t)
+  ;;   (magit-file-icons-enable-untracked-icons t)
+  ;;   (magit-file-icons-enable-diffstat-icons t))
+#+end_src
+
+*** Programming
+**** Shell scripts
+If I write a shell script I want Emacs to make it an executable file if it contains a hash-bang.
+#+begin_src emacs-lisp
+  (add-hook 'after-save-hook
+	    'executable-make-buffer-file-executable-if-script-p)
+#+end_src
+
+**** Flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :commands (flycheck-next-error flycheck-previous-error)
+    :bind (:map flycheck-mode-map
+        ("s-n" . 'flycheck-next-error)
+        ("s-p" . 'flycheck-previous-error))
+    :config
+    (global-flycheck-mode))
+
+  ;; (flymake-mode -1)
+
+  (global-set-key (kbd "s-n") #'flymake-goto-next-error)
+  (global-set-key (kbd "s-p") #'flymake-goto-prev-error)
+#+end_src
+
+**** Eglot
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure t
+    :commands (eglot-format-buffer)
+    :bind (:map eglot-mode-map
+        ("C-c C-d" . eldoc)
+        ("C-C C-r" . eglot-rename)
+        ("C-c C-a" . eglot-code-actions)
+        ("s-i" . imenu)))
+#+end_src
+
+**** Tree-sitter
+#+begin_src emacs-lisp
+    (defvar treesit-language-source-alist '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
+					    (go "https://github.com/tree-sitter/tree-sitter-go")
+					    (gomod "https://github.com/camdencheek/tree-sitter-gomod")))
+
+    (use-package tree-sitter
+      :config
+      (global-tree-sitter-mode)
+      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+    (use-package tree-sitter-langs)
+#+end_src
+
+One neat feature is code folding, that is, the ability to hide/display regions based on the programming language.
+
+#+begin_src emacs-lisp
+  (use-package fringe-helper)
+
+  (use-package ts-fold
+    :load-path "/Users/inkel/dev/emacs-tree-sitter/ts-fold"
+
+    :bind ("C-c C-f" . ts-fold-toggle)
+
+    :config
+    (add-to-list 'ts-fold-range-alist
+                 (cons 'go-ts-mode (assoc 'go-mode ts-fold-range-alist)))
+
+    (use-package ts-fold-indicators
+      :load-path "/Users/inkel/dev/emacs-tree-sitter/ts-fold"
+
+      :config
+      (setq ts-fold-indicators-fringe 'right-fringe))
+
+    ;; enable wherever tree-sitter is enabled
+    (global-ts-fold-mode 1)
+    )
+#+end_src
+
+**** Go
+One thing I do all the time in Go is browsing the documentation of a package in [[https://pkg.go.dev/][pkg.go.dev]], so I made a helper to allow me to quickly browse to the package documentation of any of the imports in the current buffer:
+#+begin_src emacs-lisp
+  (defun inkel/go-file-imports (filename)
+    "Return a list of the current imports in Go FILENAME.
+
+  The returnes list is sorted by stdlib first and third-party then."
+    (cl-flet ((stdlib-p (pkg) (not (string-match-p "\\." pkg))))
+      (let ((imports (process-lines "go" "list" "-f" "{{range .Imports}}{{println .}}{{end}}" filename)))
+	(seq-concatenate 'list
+			 (sort (seq-filter #'stdlib-p imports) #'string-lessp)
+			 (sort (seq-remove #'stdlib-p imports) #'string-lessp)))))
+
+  (defun inkel/go-package-docs (&optional package)
+    "Open up Go package PACKAGE documentation in pkg.go.dev."
+    (interactive (list (let ((packages (inkel/go-file-imports buffer-file-name))
+			     (vertico-sort-function nil))
+			 (completing-read "Browse pkg.go.dev documentation for: " packages))))
+    (browse-url (concat "https://pkg.go.dev/" package)))
+
+#+end_src
+
+In order to have =project.el= properly understand Go projects we need to define how to identify a Go project. This is done by traversing the current directory and its parents until it finds a =go.mod= file.
+
+#+begin_src emacs-lisp
+  (defun project-find-go-module (dir)
+    "Find DIR first parent directory defining a go.mod file."
+    (when-let ((root (locate-dominating-file dir "go.mod")))
+      (cons 'go-module root)))
+
+  (cl-defmethod project-root ((project (head go-module)))
+    "Return root directory of the current Go PROJECT."
+    (cdr project))
+
+  (add-hook 'project-find-functions #'project-find-go-module)
+#+end_src
+
+Because we are using Tree-sitter we have to use the =go-ts-mode= package. We also add some hooks to organize the imports and format the buffer every time we save.
+
+#+begin_src emacs-lisp
+  (defun inkel/eglot--go-organize-imports-on-save ()
+    "Hook for organizing Go imports when saving buffer."
+    (call-interactively 'eglot-code-action-organize-imports))
+
+  (defun inkel/eglot--go-format-buffer-on-save ()
+    "Hook for Go projects when saving buffer."
+    (add-hook 'before-save-hook #'inkel/eglot--go-organize-imports-on-save)
+    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+
+  (use-package go-ts-mode
+    :ensure t
+    :custom (go-ts-mode-indent-offset tab-width)
+    :mode "\\.go"
+    :bind (:map go-ts-mode-map
+		("C-c M-p" . inkel/go-package-docs))
+    :hook ((go-ts-mode . eglot-ensure)
+	   (go-ts-mode . inkel/eglot--go-format-buffer-on-save))
+    :config
+    (add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
+    (setq-default eglot-workspace-configuration
+		  '((:gopls . ((staticcheck . t)
+			       (matcher . "CaseSensitive")))))
+    (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode)))
+#+end_src
+
+***** Debugging with Delve
+#+begin_src emacs-lisp
+  (use-package go-dlv)
+#+end_src
+
+**** YAML
+Yet Another Mistaken Language
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode "\\.yml")
+#+end_src
+
+
+**** Docker
+#+begin_src emacs-lisp
+  (use-package dockerfile-mode)
+#+end_src
+
+*** Org
+#+begin_src emacs-lisp
+  (defun inkel/org--edit-options ()
+    "Enable truncate lines and word wrapping on Org files."
+    (toggle-truncate-lines nil)
+    (toggle-word-wrap t))
+
+  (use-package org
+    :pin org
+    :ensure t
+
+    :bind (("C-c a" . org-agenda)
+           ("C-c c" . org-capture)
+           ("C-c b" . org-switchb)
+           ("C-c l" . org-store-link))
+
+    :custom
+    (org-directory (expand-file-name "~/dev/grafana/org"))
+    (org-imenu-depth 7)
+    ;; Do not indent lines according to node level.
+    (org-adapt-indentation nil)
+    ;; Do not ask for confirmation when evaluating source blocks.
+    (org-babel-config-evaluate nil)
+    (org-confirm-babel-evaluate nil)
+    ;; do not create a popup when editing a source block
+    (org-src-window-setup 'current-window)
+
+    :config
+    ;; do not create a popup when editing a source block
+    ;;(setq org-src-window-setup 'current-window)
+
+    ;; enable inserting structured templates easily
+    (add-to-list 'org-modules 'org-tempo)
+
+    (add-hook 'org-mode-hook #'inkel/org--edit-options))
+#+end_src
+
+As part of my job I usually write commands that feed onto other commands but I'd like to see the intermediate results or having better options for parsing their output. Following [[https://howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]] practices makes my life much easier and nicer. And for this, I need some some languages availabel in [[http://orgmode.org/worg/org-contrib/babel/intro.html][Babel]].
+
+#+begin_src emacs-lisp
+  (use-package org
+    :commands (org-edit-src-exit)
+
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 '((emacs-lisp . t)
+                                   (awk . t)
+                                   (shell . t))))
+#+end_src
+
+Editing code blocks is great, but I keep pressing =C-x C-s= to exit them instead of =C-c '=; this should fix it:
+
+#+begin_src emacs-lisp
+  (eval-after-load 'org-src
+    '(define-key org-src-mode-map
+       (kbd "C-x C-s") #'org-edit-src-exit))
+#+end_src
+
+Last but not list, I interact lots with GitHub, so let's allow Org to export to [[https://github.github.com/gfm/][GitHub Flavored Markdown]]:
+#+begin_src emacs-lisp
+  (use-package ox-gfm
+    :ensure t
+    :after org)
+#+end_src
+
+*** Miscellaneous
+
+**** Presentations, screencasting and so on
+I haven't done any of this yet, but if I ever do (and I would like to), this is a neat package that will show which keys & commands got executed on the mode line:
+
+#+begin_src emacs-lisp
+  (use-package keycast
+    :config
+    (keycast-mode-line-mode -1))
+#+end_src
+
+** Work
+I have some configurations that are mostly only work related. I should probably move this to a module, but for now, let's have them here.
+
+*** Jsonnet
+For some things we use [[https://jsonnet.org/][Jsonnet]], which is an awful language, but what can I do?
+
+#+begin_src emacs-lisp
+  (use-package jsonnet-mode
+  :custom (jsonnet-indent-level 2))
+#+end_src
+
+*** Projects
+In order to use =project.el= I need it to instruct how to identify the project, which should be simply a directory, but because I use [[https://git-scm.com/docs/git-worktree][Git worktrees]] extensively, it's a good idea to tell =project.el= how to find them automatically:
+
+#+begin_src emacs-lisp
+  (defun project-find-dt (dir)
+    "Find DIR first parent directory with setup-context."
+    (when-let ((root (locate-dominating-file dir "setup-context")))
+      (cons 'gdt-root root)))
+
+  (cl-defmethod project-root ((project (head gdt-root)))
+    "Return root directory of the current deployment_tools PROJECT."
+    (cdr project))
+
+  (add-hook 'project-find-functions #'project-find-dt)
+#+end_src
+
+** Epilogue
+Sometimes I want to open up a file from my terminal directly into my main Emacs frame, let's start a server for it:
+
+#+begin_src emacs-lisp
+(server-start)
+#+end_src
+
+As with the preface, let's add the final lines.
+
+#+begin_src emacs-lisp
+  (provide 'init)
+
+  ;;; init.el ends here
+#+end_src
