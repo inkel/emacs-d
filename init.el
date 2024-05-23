@@ -328,7 +328,11 @@
   :config
   ;; Speeding up magit-status
   ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
-  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-recent-commits)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+  (add-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream)
+  ;; (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
