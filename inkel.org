@@ -656,6 +656,14 @@ Yet Another Mistaken Language
     ;; do not create a popup when editing a source block
     (org-src-window-setup 'current-window)
 
+    (org-capture-templates '(("t" "TODO" entry (file+headline org-default-nodes-file "Tasks")
+                              "* TODO %?\n  %i\n  %a")
+                             ("j" "Journal" entry (file+datetree "journal.org")
+                              "* %?\nEntered on %U\n  %^g%i")
+                             ("o" "On-Call" item (file+datetree "on-call.org")
+                              "")
+                             ))
+
     :config
     ;; do not create a popup when editing a source block
     ;;(setq org-src-window-setup 'current-window)
