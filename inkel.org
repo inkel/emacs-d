@@ -430,6 +430,24 @@ Having trailing whitespace is bad, really bad. Let's clear those pesky trailing 
 	   ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 #+end_src
 
+**** Completions
+These are useful and simple to use, so let's use them!
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :hook
+    (prog-mode . yas-minor-mode)
+    :defines (yas-snippet-dirs)
+    :commands (yas-reload-all)
+    :bind
+    (("C-c y n" . yas-new-snippet)
+     ("C-c y v" . yas-visit-snippet-file)
+     ("C-c y i" . yas-insert-snippet))
+    :config
+    (yas-reload-all)
+    (setq yas-snippet-dirs
+          '("~/.emacs.d/snippets")))
+#+end_src
+
 *** Magit
 #+begin_src emacs-lisp
   (defun inkel/magit--log-edit-mode-hook ()
