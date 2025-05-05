@@ -21,22 +21,22 @@ This file is read by Emacs before anything else. It shouldn't depend on any pack
 
 #+begin_src emacs-lisp
   ;; Set some sane defaults
-  (setq ring-bell-function 'ignore ; visual bell
-    visible-bell t
-    frame-title-format '("%b")
-    use-dialog-box t
-    use-file-dialog nil
-    use-short-answers t ; no more yes-or-no
-    x-stretch-cursor t
-    inhibit-splash-screen t
-    inhibit-startup-screen t
-    inhibit-x-resources t
-    inhibit-startup-echo-area-message user-login-name
-    inhibit-startup-buffer-menu t)
+  (setopt ring-bell-function 'ignore ; visual bell
+          visible-bell t
+          frame-title-format '("%b")
+          use-dialog-box t
+          use-file-dialog nil
+          use-short-answers t ; no more yes-or-no
+          x-stretch-cursor t
+          inhibit-splash-screen t
+          inhibit-startup-screen t
+          inhibit-x-resources t
+          inhibit-startup-echo-area-message user-login-name
+          inhibit-startup-buffer-menu t)
 
   ;; Indentation
-  (setq standard-indent 2
-      tab-always-indent 'complete)
+  (setopt standard-indent 2
+          tab-always-indent 'complete)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
 
@@ -54,24 +54,24 @@ This file is read by Emacs before anything else. It shouldn't depend on any pack
 We don't want Emacs performing too many GC runs on startup, to make it boot as fast as possible.
 
 #+begin_src emacs-lisp
-  (setq gc-cons-threshold most-positive-fixnum
-        gc-cons-percentage 0.5)
+  (setopt gc-cons-threshold most-positive-fixnum
+          gc-cons-percentage 0.5)
 
   (defvar inkel/emacs--file-name-handler-alist file-name-handler-alist)
   (defvar inkel/emacs--vc-handled-backends vc-handled-backends)
 
-  (setq file-name-handler-alist nil
-        vc-handled-backends nil)
+  (setopt file-name-handler-alist nil
+          vc-handled-backends nil)
 
   (defun inkel/emacs--startup-hook ()
     "Restore defaults and report initialization time and GC collections."
-    (setq gc-cons-threshold (* 1000 1000 8)
-          gc-cons-percentage 0.1
-          file-name-handler-alist inkel/emacs--file-name-handler-alist
-          vc-handled-backends inkel/emacs--vc-handled-backends)
+    (setopt gc-cons-threshold (* 1000 1000 8)
+            gc-cons-percentage 0.1
+            file-name-handler-alist inkel/emacs--file-name-handler-alist
+            vc-handled-backends inkel/emacs--vc-handled-backends)
     (message "Emacs ready in %.2fs with %d garbage collections."
-           (float-time (time-subtract after-init-time before-init-time))
-           gcs-done))
+             (float-time (time-subtract after-init-time before-init-time))
+             gcs-done))
 
   (add-hook 'emacs-startup-hook #'inkel/emacs--startup-hook)
 
@@ -82,7 +82,7 @@ We don't want Emacs performing too many GC runs on startup, to make it boot as f
 I don't want my installed packages to be initialized automatically, as sometimes I install packages just to test them.
 
 #+begin_src emacs-lisp
-  (setq package-enable-at-startup nil)
+  (setopt package-enable-at-startup nil)
 #+end_src
 
 The Go team released [[https://go.dev/blog/go-fonts][nice fonts]] which are the ones I've been using for a long time:
@@ -127,14 +127,14 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
 *** No custom file
 #+begin_src emacs-lisp
   ;; Disable the damn thing by making it disposable.
-  (setq custom-file (make-temp-file "emacs-custom-"))
+  (setopt custom-file (make-temp-file "emacs-custom-"))
 #+end_src
 
 *** No backups
 #+begin_src emacs-lisp
-  (setq make-backup-files nil
-	backup-inhibited nil
-	create-lockfiles nil)
+  (setopt make-backup-files nil
+          backup-inhibited nil
+          create-lockfiles nil)
 #+end_src
 
 *** Be silent with native compilation
@@ -181,21 +181,21 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
   (use-package ibuffer
     :bind (("C-x C-b" . ibuffer))
     :config
-    (setq ibuffer-default-sorting-mode 'filename/process))
+    (setopt ibuffer-default-sorting-mode 'filename/process))
 #+end_src
 
 *** Where to display buffers
 #+begin_src emacs-lisp
   ;;; https://protesilaos.com/codelog/2024-02-08-emacs-window-rules-display-buffer-alist/
-  (setq display-buffer-alist
-        '(
-        
-          ("\\*xref\\*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (dedicated . t)
-           (window-height . fit-window-to-buffer))
-        
-          ))
+  (setopt display-buffer-alist
+          '(
+
+            ("\\*xref\\*"
+             (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (dedicated . t)
+             (window-height . fit-window-to-buffer))
+
+            ))
 #+end_src
 
 *** Packages
@@ -212,19 +212,19 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
 
   (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
-  (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
-			   ("org"   . "https://orgmode.org/elpa/")
-			   ("melpa" . "https://melpa.org/packages/"))
-	use-package-always-ensure t
-	use-package-always-defer nil
-	use-package-verbose init-file-debug
-	use-package-expand-minimally (not init-file-debug)
-	debug-on-error init-file-debug)
+  (setopt package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
+                             ("org"   . "https://orgmode.org/elpa/")
+                             ("melpa" . "https://melpa.org/packages/"))
+          use-package-always-ensure t
+          use-package-always-defer nil
+          use-package-verbose init-file-debug
+          use-package-expand-minimally (not init-file-debug)
+          debug-on-error init-file-debug)
 
-  (setq package-archive-priorities
-	'(("melpa" . 3)
-	  ("org" . 2)
-	  ("gnu" . 1)))
+  (setopt package-archive-priorities
+          '(("melpa" . 3)
+            ("org" . 2)
+            ("gnu" . 1)))
 
   (defvar use-package-enable-imenu-support t)
 #+end_src
@@ -235,8 +235,8 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
   (use-package vertico
     :ensure t
     :config
-    (setq vertico-cycle t
-	  vertico-resize nil)
+    (setopt vertico-cycle t
+            vertico-resize nil)
     (vertico-mode 1))
 #+end_src
 
@@ -253,7 +253,7 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
   (use-package orderless
     :ensure t
     :config
-    (setq completion-styles '(orderless basic)))
+    (setopt completion-styles '(orderless basic)))
 #+end_src
 
 **** Consult
@@ -391,7 +391,7 @@ I like editing with knowing which line number am I in. I also would like to know
 #+begin_src emacs-lisp
   (use-package display-line-numbers
     :config (global-display-line-numbers-mode))
-  (setq column-number-mode t)
+  (setopt column-number-mode t)
 #+end_src
 
 Having trailing whitespace is bad, really bad. Let's clear those pesky trailing whitespaces when saving.
@@ -444,15 +444,15 @@ These are useful and simple to use, so let's use them!
      ("C-c y i" . yas-insert-snippet))
     :config
     (yas-reload-all)
-    (setq yas-snippet-dirs
-          '("~/.emacs.d/snippets")))
+    (setopt yas-snippet-dirs
+            '("~/.emacs.d/snippets")))
 #+end_src
 
 *** Magit
 #+begin_src emacs-lisp
   (defun inkel/magit--log-edit-mode-hook ()
     "Editing options for writing commit messages in Magit."
-    (setq fill-column 72)
+    (setopt fill-column 72)
     (flyspell-mode t)
     (turn-on-auto-fill))
 
@@ -473,7 +473,7 @@ These are useful and simple to use, so let's use them!
     ;; (add-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream)
 
     (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook)
-    (setq vc-handled-backends (delq 'Git vc-handled-backends)))
+    (setopt vc-handled-backends (delq 'Git vc-handled-backends)))
 
   ;; (use-package magit-file-icons
   ;;   :ensure t
@@ -492,10 +492,11 @@ These are useful and simple to use, so let's use them!
 If I write a shell script I want Emacs to make it an executable file if it contains a hash-bang.
 #+begin_src emacs-lisp
   (add-hook 'after-save-hook
-	    'executable-make-buffer-file-executable-if-script-p)
+            'executable-make-buffer-file-executable-if-script-p)
 #+end_src
 
-**** Flycheck
+**** Flycheck & flymake
+I don't know which one works better, flycheck seems to be more modern but doens't play well with Eglot.
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
@@ -510,6 +511,13 @@ If I write a shell script I want Emacs to make it an executable file if it conta
 
   (global-set-key (kbd "s-n") #'flymake-goto-next-error)
   (global-set-key (kbd "s-p") #'flymake-goto-prev-error)
+
+  (use-package sideline-flymake
+    :hook (flymake-mode . sideline-mode)
+    :init
+    (setopt sideline-flymake-display-mode 'point) ; 'point to show errors only on point
+                                                ; 'line to show errors on the current line
+    (setopt sideline-backends-right '(sideline-flymake)))
 #+end_src
 
 **** Eglot
@@ -556,7 +564,7 @@ One neat feature is code folding, that is, the ability to hide/display regions b
       :load-path "/Users/inkel/dev/emacs-tree-sitter/ts-fold"
 
       :config
-      (setq ts-fold-indicators-fringe 'right-fringe))
+      (setopt ts-fold-indicators-fringe 'right-fringe))
 
     ;; enable wherever tree-sitter is enabled
     (global-ts-fold-mode 1)
@@ -582,7 +590,6 @@ One thing I do all the time in Go is browsing the documentation of a package in 
 			     (vertico-sort-function nil))
 			 (completing-read "Browse pkg.go.dev documentation for: " packages))))
     (browse-url (concat "https://pkg.go.dev/" package)))
-
 #+end_src
 
 In order to have =project.el= properly understand Go projects we need to define how to identify a Go project. This is done by traversing the current directory and its parents until it finds a =go.mod= file.
@@ -598,6 +605,27 @@ In order to have =project.el= properly understand Go projects we need to define 
     (cdr project))
 
   (add-hook 'project-find-functions #'project-find-go-module)
+#+end_src
+
+Running tests is integral to development, and these helpers should make it a bit easier.
+#+begin_src emacs-lisp
+  (defun inkel/go--test-list (&optional type regex package)
+    (seq-filter
+     #'(lambda (s) (string-prefix-p (or type "Test") s))
+     (process-lines "go" "test" "-list"
+                    (or regex ".")
+                    (or package "."))))
+
+  (defun inkel/go-test (name)
+    "Run `go test -run=NAME'."
+    (interactive
+     (list
+      (completing-read "Select which test to run: "
+                       (inkel/go--test-list "Test" "." "."))))
+    (with-current-buffer (get-buffer-create "*Go test*")
+      (let ((code (call-process "go" nil t nil "test" "-run" name)))
+        (cond ((= code 1) (switch-to-buffer "*Go test*"))
+              ((= code 0) (message "PASS"))))))
 #+end_src
 
 Because we are using Tree-sitter we have to use the =go-ts-mode= package. We also add some hooks to organize the imports and format the buffer every time we save.
@@ -617,14 +645,15 @@ Because we are using Tree-sitter we have to use the =go-ts-mode= package. We als
     :custom (go-ts-mode-indent-offset tab-width)
     :mode "\\.go"
     :bind (:map go-ts-mode-map
-		("C-c M-p" . inkel/go-package-docs))
+                ("C-c C-t" . inkel/go-test)
+                ("C-c M-p" . inkel/go-package-docs))
     :hook ((go-ts-mode . eglot-ensure)
-	   (go-ts-mode . inkel/eglot--go-format-buffer-on-save))
+           (go-ts-mode . inkel/eglot--go-format-buffer-on-save))
     :config
     (add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
     (setq-default eglot-workspace-configuration
-		  '((:gopls . ((staticcheck . t)
-			       (matcher . "CaseSensitive")))))
+                  '((:gopls . ((staticcheck . t)
+                               (matcher . "CaseSensitive")))))
     (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode)))
 #+end_src
 

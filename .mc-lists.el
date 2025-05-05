@@ -22,6 +22,7 @@
         ruby-electric-space
         sh-assignment
         swiper
+        upcase-dwim
         upcase-region
         upcase-region
         wdired-finish-edit
