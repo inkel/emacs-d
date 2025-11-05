@@ -597,7 +597,7 @@ In order to have =project.el= properly understand Go projects we need to define 
 #+begin_src emacs-lisp
   (defun project-find-go-module (dir)
     "Find DIR first parent directory defining a go.mod file."
-    (when-let ((root (locate-dominating-file dir "go.mod")))
+    (when-let* ((root (locate-dominating-file dir "go.mod")))
       (cons 'go-module root)))
 
   (cl-defmethod project-root ((project (head go-module)))
@@ -777,7 +777,7 @@ In order to use =project.el= I need it to instruct how to identify the project, 
 #+begin_src emacs-lisp
   (defun project-find-dt (dir)
     "Find DIR first parent directory with setup-context."
-    (when-let ((root (locate-dominating-file dir "setup-context")))
+    (when-let* ((root (locate-dominating-file dir "setup-context")))
       (cons 'gdt-root root)))
 
   (cl-defmethod project-root ((project (head gdt-root)))
