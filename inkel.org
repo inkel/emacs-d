@@ -146,6 +146,11 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
                   native-compile-prune-cache t))
 #+end_src
 
+*** Focus on the help buffer automatically
+#+begin_src emacs-lisp
+  (setopt help-window-select t)
+#+end_src
+
 *** Keep track of opened files and placements
 #+begin_src emacs-lisp
   (use-package savehist
