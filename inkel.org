@@ -9,6 +9,7 @@ For the longest time I wanted to try the Org + Babel mode of writing my configur
 All Emacs files require some comments that identify what the file is for and all that crap.
 
 #+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t; -*-
   ;;; init.el --- My Emacs configuration
 
   ;;; Commentary:
