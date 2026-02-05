@@ -459,7 +459,7 @@ These are useful and simple to use, so let's use them!
             '("~/.emacs.d/snippets")))
 #+end_src
 
-*** Magit
+*** TODO Magit
 #+begin_src emacs-lisp
   (defun inkel/magit--log-edit-mode-hook ()
     "Editing options for writing commit messages in Magit."
@@ -481,6 +481,7 @@ These are useful and simple to use, so let's use them!
     ;; (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
     ;; (remove-hook 'magit-status-sections-hook 'magit-insert-recent-commits)
     ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
     ;; (add-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream)
 
     (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook)
@@ -496,6 +497,8 @@ These are useful and simple to use, so let's use them!
   ;;   (magit-file-icons-enable-diff-file-section-icons t)
   ;;   (magit-file-icons-enable-untracked-icons t)
   ;;   (magit-file-icons-enable-diffstat-icons t))
+
+  (use-package forge :after magit)
 #+end_src
 
 *** Programming
