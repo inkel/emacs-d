@@ -47,7 +47,9 @@
         markdown-exdent-or-delete
         mouse-set-region
         org-self-insert-command
+        prog-fill-reindent-defun
         ruby-electric-matching-char
         shell-command-on-region
+        switch-to-buffer
         undo-redo
         ))
