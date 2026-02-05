@@ -235,6 +235,11 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
   (defvar use-package-enable-imenu-support t)
 #+end_src
 
+**** Undoing is important
+#+begin_src emacs-lisp
+  (use-package vundo)
+#+end_src
+
 **** Minibuffer
 ***** Vertico
 #+begin_src emacs-lisp
