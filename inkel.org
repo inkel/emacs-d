@@ -801,6 +801,64 @@ In order to use =project.el= I need it to instruct how to identify the project, 
   (add-hook 'project-find-functions #'project-find-dt)
 #+end_src
 
+** AI
+Yes, it's time to accept that AI is not important. At work I've been trying [[https://www.anthropic.com/claude][Claude]], so let's start with it:
+
+#+begin_src emacs-lisp
+  ;; ;; Perhaps the most comprehensive client of all
+  ;; ;; https://github.com/karthink/gptel
+  ;; (use-package gptel
+  ;;   ;; :config
+  ;;   ;; ;; Configure Claude
+  ;;   ;; (cl-flet ((read-key (file) (with-temp-buffer
+  ;;   ;;                              (insert-file-contents file)
+  ;;   ;;                              (string-trim (buffer-string)))))
+  ;;   ;;   (setq gptel-backend (gptel-make-anthropic "Claude"
+  ;;   ;;                         :stream t
+  ;;   ;;                         :key (read-key "~/dev/.claude.key")
+  ;;   ;;                         :models '(claude-sonnet-4-20250514)))
+  ;;   ;;   (setopt gptel-api-key (read-key "~/dev/.chatgpt.emacs.key")))
+  ;;   )
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; https://github.com/stevemolitor/claude-code.el
+  (use-package inheritenv)
+
+  (use-package eat :ensure t)
+
+  (use-package vterm :ensure t)
+
+  (use-package claude-code
+    :ensure t
+
+    :config
+    (claude-code-mode)
+
+    :bind-keymap ("C-c C" . claude-code-command-map)
+
+    :bind
+    (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
+#+end_src
+
+*** MCP
+[[https://modelcontextprotocol.io/docs/getting-started/intro][Model Context Protocol]] is the new standard to communicate with AI applications.
+
+#+begin_src emacs-lisp
+  (use-package mcp
+    :ensure t
+    :after gptel
+    :config (require 'mcp-hub)
+
+    :custom (mcp-hub-servers
+             `(("gopls" . (:command "gopls" :args ("mcp")))))
+
+    ;; we could start all servers with Emacs, but we won't for now.
+    ;; :hook (after-init . mcp-hub-start-all-server)
+    )
+#+end_src
+
+
 ** Epilogue
 Sometimes I want to open up a file from my terminal directly into my main Emacs frame, let's start a server for it:
 
