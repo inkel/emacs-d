@@ -548,16 +548,17 @@ I don't know which one works better, flycheck seems to be more modern but doens'
 
 **** Tree-sitter
 #+begin_src emacs-lisp
-    (defvar treesit-language-source-alist '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
-					    (go "https://github.com/tree-sitter/tree-sitter-go")
-					    (gomod "https://github.com/camdencheek/tree-sitter-gomod")))
+  (defvar treesit-language-source-alist '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
+                                          (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+                                          (go "https://github.com/tree-sitter/tree-sitter-go")
+                                          (gomod "https://github.com/camdencheek/tree-sitter-gomod")))
 
-    (use-package tree-sitter
-      :config
-      (global-tree-sitter-mode)
-      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-    (use-package tree-sitter-langs)
+  (use-package tree-sitter-langs)
 #+end_src
 
 One neat feature is code folding, that is, the ability to hide/display regions based on the programming language.
@@ -761,6 +762,13 @@ Last but not list, I interact lots with GitHub, so let's allow Org to export to 
   (use-package ox-gfm
     :ensure t
     :after org)
+#+end_src
+
+**** HCL - Terraform
+#+begin_src emacs-lisp
+  (use-package terraform-mode
+    :hook ((terraform-mode . eglot-ensure)
+           (before-save . eglot-format)))
 #+end_src
 
 *** Miscellaneous
