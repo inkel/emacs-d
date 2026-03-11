@@ -479,6 +479,8 @@ These are useful and simple to use, so let's use them!
     ;; Speeding up magit-status
     ;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
     (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header) ;; There are ways to see this when needed, most of the time I don't need it.
+    (remove-hook 'magit-status-headers-hook 'magit-insert-diff-filter-header)
+    (remove-hook 'magit-status-headers-hook 'magit-insert-upstream-branch-header)
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-unpushed-to-upstream
                             'magit-insert-unpushed-to-upstream-or-recent
