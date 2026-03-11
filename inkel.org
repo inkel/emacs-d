@@ -538,6 +538,8 @@ I don't know which one works better, flycheck seems to be more modern but doens'
 #+begin_src emacs-lisp
   (use-package eglot
     :ensure t
+    :custom
+    (eglot-autoshutdown t)
     :commands (eglot-format-buffer)
     :bind (:map eglot-mode-map
         ("C-c C-d" . eldoc)
