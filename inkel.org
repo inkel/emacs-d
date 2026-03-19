@@ -370,6 +370,12 @@ Moving between windows is easier with [[https://github.com/abo-abo/ace-window][a
     :bind ("s-i" . imenu))
 #+end_src
 
+And we want to find things using the Silver Seacher:
+
+#+begin_src emacs-lisp
+  (use-package ag)
+#+end_src
+
 *** Project management
 #+begin_src emacs-lisp
   (use-package project)
