@@ -781,7 +781,8 @@ Last but not list, I interact lots with GitHub, so let's allow Org to export to 
 #+begin_src emacs-lisp
   (use-package terraform-mode
     :hook ((terraform-mode . eglot-ensure)
-           (before-save . eglot-format)))
+           (before-save . terraform-format-buffer)
+           (before-save . eglot-format-buffer)))
 #+end_src
 
 *** Miscellaneous
