@@ -29,6 +29,7 @@ This file is read by Emacs before anything else. It shouldn't depend on any pack
           use-file-dialog nil
           use-short-answers t ; no more yes-or-no
           x-stretch-cursor t
+          require-final-newline t
           inhibit-splash-screen t
           inhibit-startup-screen t
           inhibit-x-resources t
