@@ -565,6 +565,8 @@ I don't know which one works better, flycheck seems to be more modern but doens'
                                           (gomod "https://github.com/camdencheek/tree-sitter-gomod")))
 
   (use-package tree-sitter
+    :custom
+    (treesit-auto-install-grammar t)
     :config
     (global-tree-sitter-mode)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
