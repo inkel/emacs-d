@@ -63,7 +63,7 @@ We don't want Emacs performing too many GC runs on startup, to make it boot as f
   (defvar inkel/emacs--vc-handled-backends vc-handled-backends)
 
   (setopt file-name-handler-alist nil
-          vc-handled-backends nil)
+          vc-handled-backends inkel/emacs--vc-handled-backends)
 
   (defun inkel/emacs--startup-hook ()
     "Restore defaults and report initialization time and GC collections."
@@ -493,8 +493,7 @@ These are useful and simple to use, so let's use them!
                             'magit-insert-unpushed-to-upstream-or-recent
                             'replace) ;; Hide "Recent Commits"
 
-    (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook)
-    (setopt vc-handled-backends (delq 'Git vc-handled-backends)))
+    (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook))
 
   ;; (use-package magit-file-icons
   ;;   :ensure t
@@ -828,6 +827,8 @@ Yes, it's time to accept that AI is not important. At work I've been trying [[ht
 
 #+begin_src emacs-lisp
   ;; Claude Code IDE integration with Emacs
+  (add-to-list 'vc-handled-backends 'Git)
+
   (use-package claude-code-ide
     :ensure t
     :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
