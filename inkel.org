@@ -720,7 +720,7 @@ Yet Another Mistaken Language
            ("C-c l" . org-store-link))
 
     :custom
-    (org-directory (expand-file-name "~/dev/grafana/org"))
+    (org-directory (expand-file-name "~/org"))
     (org-imenu-depth 7)
     ;; Do not indent lines according to node level.
     (org-adapt-indentation nil)
