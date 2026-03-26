@@ -120,6 +120,7 @@ Some binaries are installed outside the typical =PATH= locations, let's use the 
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
+    :ensure t
     :if (memq window-system '(mac ns))
     :config (exec-path-from-shell-initialize))
 #+end_src
