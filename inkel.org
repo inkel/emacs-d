@@ -738,6 +738,10 @@ Yet Another Mistaken Language
                               "")
                              ))
 
+    ;; Make org the default mode when starting Emacs
+    (initial-major-mode 'org-mode)
+    (initial-scratch-message "#\n# Temporary buffer for notes\n#\n")
+
     :config
     ;; do not create a popup when editing a source block
     ;;(setq org-src-window-setup 'current-window)
