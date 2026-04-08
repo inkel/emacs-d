@@ -639,8 +639,8 @@ Running tests is integral to development, and these helpers should make it a bit
 #+begin_src emacs-lisp
   (use-package gotest-mode
     :ensure nil
-    ; :load-path "~/repos/gotest-mode.el/"
-    :vc (:url "https://github.com/inkel/gotest-mode.el" :rev :newest)
+    :load-path "~/repos/gotest-mode.el/"
+    ; :vc (:url "https://github.com/inkel/gotest-mode.el" :rev :newest)
     :hook (go-ts-mode . gotest-mode))
 #+end_src
 
