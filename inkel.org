@@ -637,23 +637,11 @@ In order to have =project.el= properly understand Go projects we need to define 
 
 Running tests is integral to development, and these helpers should make it a bit easier.
 #+begin_src emacs-lisp
-  (defun inkel/go--test-list (&optional type regex package)
-    (seq-filter
-     #'(lambda (s) (string-prefix-p (or type "Test") s))
-     (process-lines "go" "test" "-list"
-                    (or regex ".")
-                    (or package "."))))
-
-  (defun inkel/go-test (name)
-    "Run `go test -run=NAME'."
-    (interactive
-     (list
-      (completing-read "Select which test to run: "
-                       (inkel/go--test-list "Test" "." "."))))
-    (with-current-buffer (get-buffer-create "*Go test*")
-      (let ((code (call-process "go" nil t nil "test" "-run" name)))
-        (cond ((= code 1) (switch-to-buffer "*Go test*"))
-              ((= code 0) (message "PASS"))))))
+  (use-package gotest-mode
+    :ensure nil
+    ; :load-path "~/repos/gotest-mode.el/"
+    :vc (:url "https://github.com/inkel/gotest-mode.el" :rev :newest)
+    :hook (go-ts-mode . gotest-mode))
 #+end_src
 
 Because we are using Tree-sitter we have to use the =go-ts-mode= package. We also add some hooks to organize the imports and format the buffer every time we save.
@@ -673,7 +661,7 @@ Because we are using Tree-sitter we have to use the =go-ts-mode= package. We als
     :custom (go-ts-mode-indent-offset tab-width)
     :mode "\\.go"
     :bind (:map go-ts-mode-map
-                ("C-c C-t" . inkel/go-test)
+                ;("C-c C-t" . inkel/go-test)
                 ("C-c M-p" . inkel/go-package-docs))
     :hook ((go-ts-mode . eglot-ensure)
            (go-ts-mode . inkel/eglot--go-format-buffer-on-save))
