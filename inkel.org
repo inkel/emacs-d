@@ -834,6 +834,8 @@ Yes, it's time to accept that AI is not important. At work I've been trying [[ht
   ;; Claude Code IDE integration with Emacs
   (add-to-list 'vc-handled-backends 'Git)
 
+  (use-package vterm)
+
   (use-package claude-code-ide
     :ensure t
     :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
