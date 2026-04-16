@@ -508,6 +508,10 @@ These are useful and simple to use, so let's use them!
   ;;   (magit-file-icons-enable-diffstat-icons t))
 
   (use-package forge :after magit)
+
+  (use-package git-link
+    :bind ("C-c g l" . git-link-dispatch)
+    :config (require 'git-link-transient))
 #+end_src
 
 *** Programming
