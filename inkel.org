@@ -468,12 +468,48 @@ These are useful and simple to use, so let's use them!
 #+end_src
 
 *** TODO Magit
+At Grafana Labs we have a nice script to cleanup merged branches when using squash commits for merging (yuck)
+
+#+begin_src shell :tangle ~/bin/git-cleanup
+  #!/usr/bin/env bash
+  # set -x
+
+  BRANCH=$(git symbolic-ref --short HEAD)
+
+  PRIMARY_BRANCH='master'
+  if [ -n "$(git branch -l main)" ]; then
+    PRIMARY_BRANCH=main
+  fi
+
+  XARGS_FLAGS="-r"
+
+  if [[ $(uname -s) = "Darwin" ]]; then XARGS_FLAGS=""; fi
+
+  if [ "$BRANCH" != "$PRIMARY_BRANCH" ]; then
+    git checkout "$PRIMARY_BRANCH"
+  fi
+
+  git pull
+  git remote | xargs -n1 git remote prune
+  git branch --merged | grep -v $PRIMARY_BRANCH | grep -v '^[*+]' | xargs $XARGS_FLAGS git branch -d
+  git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base $PRIMARY_BRANCH $branch) && [[ $(git cherry $PRIMARY_BRANCH $(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done
+
+  if [ "$BRANCH" != "$PRIMARY_BRANCH" -a -n "$(git branch -l $BRANCH)" ]; then
+    git checkout "$BRANCH"
+  fi
+#+end_src
+
 #+begin_src emacs-lisp
   (defun inkel/magit--log-edit-mode-hook ()
     "Editing options for writing commit messages in Magit."
     (setopt fill-column 72)
     (flyspell-mode t)
     (turn-on-auto-fill))
+
+  (defun inkel/magit-cleanup ()
+    "Run git cleanup"
+    (interactive)
+    (magit-run-git "cleanup"))
 
   (use-package magit
     :bind (("C-x g" . magit-status))
@@ -493,6 +529,9 @@ These are useful and simple to use, so let's use them!
                             'magit-insert-unpushed-to-upstream
                             'magit-insert-unpushed-to-upstream-or-recent
                             'replace) ;; Hide "Recent Commits"
+
+    (transient-append-suffix 'magit-run "p"
+      '("C" "Cleanup Git" inkel/magit-cleanup))
 
     (add-hook 'magit-log-edit-mode-hook 'inkel/magit--log-edit-mode-hook))
 
