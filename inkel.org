@@ -834,12 +834,35 @@ I haven't done any of this yet, but if I ever do (and I would like to), this is 
 ** Work
 I have some configurations that are mostly only work related. I should probably move this to a module, but for now, let's have them here.
 
-*** Jsonnet
+*** JSON & Jsonnet
 For some things we use [[https://jsonnet.org/][Jsonnet]], which is an awful language, but what can I do?
 
 #+begin_src emacs-lisp
+  (setopt js-indent-level 2)
+
+  (add-to-list 'treesit-language-source-alist
+               '(json5 "https://github.com/Joakker/tree-sitter-json5"))
+
+  (use-package json5-ts-mode
+    :mode "\\.json5"
+    :custom (json5-ts-mode-indent-offset 2))
+
+  (defun inkel/jsonnet-lib ()
+    (let
+        ((dtroot (locate-dominating-file buffer-file-name "ksonnet")))
+      (if dtroot
+          (progn
+            (setopt--set 'jsonnet-library-search-directories
+                         (list (expand-file-name "ksonnet/lib" dtroot)))))))
+
   (use-package jsonnet-mode
-  :custom (jsonnet-indent-level 2))
+    :hook (jsonnet-mode . inkel/jsonnet-lib)
+    :custom (jsonnet-indent-level 2))
+
+  ;; Jsonnet LSP
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(jsonnet-mode . ("jsonnet-language-server" "--tanka"))))
 #+end_src
 
 *** Projects
