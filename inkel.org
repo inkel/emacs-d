@@ -392,7 +392,7 @@ And we want to find things using the Silver Seacher:
     (doom-themes-enable-italic t)
 
     :commands (doom-themes-visual-bell-config
-	       doom-themes-org-config)
+               doom-themes-org-config)
 
     :config
     ;; Enable flashing mode-line on errors
