@@ -521,7 +521,8 @@ At Grafana Labs we have a nice script to cleanup merged branches when using squa
   (defun inkel/magit-cleanup ()
     "Run git cleanup"
     (interactive)
-    (magit-run-git "cleanup"))
+    (magit-run-git-async "cleanup")
+    (magit-process-buffer))
 
   (use-package magit
     :bind (("C-x g" . magit-status))
