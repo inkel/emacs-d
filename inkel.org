@@ -899,6 +899,23 @@ Yes, it's time to accept that AI is not important. At work I've been trying [[ht
     (claude-code-ide-emacs-tools-setup))
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun inkel/claude-find-skill ()
+    "Open a Claude skill directory from ~/.claude/skills/ using completion."
+    (interactive)
+    (let* ((skills-dir (expand-file-name "~/.claude/skills/"))
+           (skills (when (file-directory-p skills-dir)
+                     (seq-filter
+                      (lambda (f)
+                        (file-directory-p (expand-file-name f skills-dir)))
+                      (directory-files skills-dir nil "^[^.]"))))
+           (skill (completing-read "Claude skill: " skills nil t))
+           (skill-path (expand-file-name (concat skill "/SKILL.md") skills-dir)))
+      (find-file skill-path)))
+
+  (keymap-set global-map "C-c K" #'inkel/claude-find-skill)
+#+end_src
+
 *** MCP
 [[https://modelcontextprotocol.io/docs/getting-started/intro][Model Context Protocol]] is the new standard to communicate with AI applications.
 
