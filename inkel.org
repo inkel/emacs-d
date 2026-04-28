@@ -402,6 +402,18 @@ And we want to find things using the Silver Seacher:
     (doom-themes-org-config))
 
   (load-theme 'doom-solarized-light t)
+
+  ;; Losely inspired by http://github.com/LionyxML/auto-dark-emacs
+  (setopt inkel/current-theme 'light)
+  (defun inkel/toggle-theme ()
+    "Set the custom theme."
+    (interactive)
+    (cond ((eq inkel/current-theme 'light)
+           (setopt inkel/current-theme 'dark)
+           (load-theme 'doom-ayu-mirage t))
+          ((eq inkel/current-theme 'dark)
+           (setopt inkel/current-theme 'light)
+           (load-theme 'doom-solarized-light t))))
 #+end_src
 
 *** Editing
