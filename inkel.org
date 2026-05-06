@@ -866,8 +866,8 @@ For some things we use [[https://jsonnet.org/][Jsonnet]], which is an awful lang
         ((dtroot (locate-dominating-file buffer-file-name "ksonnet")))
       (if dtroot
           (progn
-            (setopt--set 'jsonnet-library-search-directories
-                         (list (expand-file-name "ksonnet/lib" dtroot)))))))
+            (setopt jsonnet-library-search-directories
+                    (list (expand-file-name "ksonnet/lib" dtroot)))))))
 
   (use-package jsonnet-mode
     :hook (jsonnet-mode . inkel/jsonnet-lib)
