@@ -930,6 +930,15 @@ Yes, it's time to accept that AI is not important. At work I've been trying [[ht
   (keymap-set global-map "C-c K" #'inkel/claude-find-skill)
 #+end_src
 
+I might also try the [[https://pi.dev/][Pi coding agent]], so let's see how it integrates:
+
+#+begin_src emacs-lisp
+  (use-package md-ts-mode)
+
+  (use-package pi-coding-agent
+    :bind ("C-c p" . pi-coding-agent-toggle))
+#+end_src
+
 *** MCP
 [[https://modelcontextprotocol.io/docs/getting-started/intro][Model Context Protocol]] is the new standard to communicate with AI applications.
 
