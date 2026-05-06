@@ -939,24 +939,6 @@ I might also try the [[https://pi.dev/][Pi coding agent]], so let's see how it i
     :bind ("C-c p" . pi-coding-agent-toggle))
 #+end_src
 
-*** MCP
-[[https://modelcontextprotocol.io/docs/getting-started/intro][Model Context Protocol]] is the new standard to communicate with AI applications.
-
-#+begin_src emacs-lisp
-  (use-package mcp
-    :ensure t
-    :after gptel
-    :config (require 'mcp-hub)
-
-    :custom (mcp-hub-servers
-             `(("gopls" . (:command "gopls" :args ("mcp")))))
-
-    ;; we could start all servers with Emacs, but we won't for now.
-    ;; :hook (after-init . mcp-hub-start-all-server)
-    )
-#+end_src
-
-
 ** Epilogue
 Sometimes I want to open up a file from my terminal directly into my main Emacs frame, let's start a server for it:
 
