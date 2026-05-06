@@ -725,8 +725,8 @@ Because we are using Tree-sitter we have to use the =go-ts-mode= package. We als
 Yet Another Mistaken Language
 
 #+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode "\\.yml")
+  (use-package yaml-ts-mode
+    :mode ("\\.yml" "\\.yaml"))
 #+end_src
 
 
