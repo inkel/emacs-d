@@ -829,9 +829,9 @@ Last but not list, I interact lots with GitHub, so let's allow Org to export to 
 **** HCL - Terraform
 #+begin_src emacs-lisp
   (use-package terraform-mode
+    :config (setopt terraform-format-on-save t)
     :hook ((terraform-mode . eglot-ensure)
-           (before-save . terraform-format-buffer)
-           (before-save . eglot-format-buffer)))
+           (before-save . terraform-format-buffer)))
 #+end_src
 
 *** Miscellaneous
