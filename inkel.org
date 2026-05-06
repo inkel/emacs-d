@@ -285,11 +285,6 @@ Not really minibuffer only, but great addition.
            ("M-g i" . consult-imenu)
            ("M-g I" . consult-imenu-multi)))
 
-  (use-package consult-flycheck
-    :ensure t
-    :after consult
-    :bind (("M-g f" . consult-flycheck)))
-
   ;; This is useful for navigating through xref history
   ;; https://takeonrules.com/2024/06/08/adding-a-consult-function-for-visualizing-xref/
   (defvar consult--xref-history nil
@@ -574,28 +569,19 @@ If I write a shell script I want Emacs to make it an executable file if it conta
             'executable-make-buffer-file-executable-if-script-p)
 #+end_src
 
-**** Flycheck & flymake
-I don't know which one works better, flycheck seems to be more modern but doens't play well with Eglot.
+**** Flymake
+Flymake is Emacs native and what Eglot uses.
+
 #+begin_src emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :commands (flycheck-next-error flycheck-previous-error)
-    :bind (:map flycheck-mode-map
-        ("s-n" . 'flycheck-next-error)
-        ("s-p" . 'flycheck-previous-error))
-    :config
-    (global-flycheck-mode))
-
-  ;; (flymake-mode -1)
-
   (global-set-key (kbd "s-n") #'flymake-goto-next-error)
   (global-set-key (kbd "s-p") #'flymake-goto-prev-error)
+  (global-set-key (kbd "M-g f") #'flymake-show-buffer-diagnostics)
 
   (use-package sideline-flymake
     :hook (flymake-mode . sideline-mode)
     :init
     (setopt sideline-flymake-display-mode 'point) ; 'point to show errors only on point
-                                                ; 'line to show errors on the current line
+                                          ; 'line to show errors on the current line
     (setopt sideline-backends-right '(sideline-flymake)))
 #+end_src
 
