@@ -608,7 +608,7 @@ I don't know which one works better, flycheck seems to be more modern but doens'
     :commands (eglot-format-buffer)
     :bind (:map eglot-mode-map
         ("C-c C-d" . eldoc)
-        ("C-C C-r" . eglot-rename)
+        ("C-c C-r" . eglot-rename)
         ("C-c C-a" . eglot-code-actions)
         ("s-i" . imenu)))
 #+end_src
